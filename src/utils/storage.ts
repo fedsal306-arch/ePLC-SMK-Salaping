@@ -21,11 +21,11 @@ export interface SchoolInfo {
 export const DEFAULT_SCHOOL: SchoolInfo = {
   nama_sekolah: 'SMK Salaping, Kota Marudu',
   logo_sekolah: SMK_SALAPING_LOGO,
-  alamat_sekolah: 'Peti Surat 449, 89108 Kota Marudu, Sabah',
+  alamat_sekolah: 'SMK Salaping, Beg Berkunci 18, 89108, Kota Marudu',
   no_telefon: '088-661002',
   no_faks: '088-661001',
-  email_sekolah: 'xea5104@moe.edu.my',
-  kod_sekolah: 'XEA5104',
+  email_sekolah: 'xea5105@moe.edu.my',
+  kod_sekolah: 'XEA5105',
 };
 
 export const NAMA_PENGETUA = 'Sanaleh bin Daud';

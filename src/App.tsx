@@ -32,7 +32,7 @@ import { ReportDetailModal } from './components/ReportDetailModal';
 import { SchoolSettingsModal } from './components/SchoolSettingsModal';
 import { StaffDirectoryModal } from './components/StaffDirectoryModal';
 import { OfflineIndicator } from './components/OfflineIndicator';
-import { SPLKPMModal } from './components/SPLKPMModal';
+import { HRMISLatihanModal } from './components/HRMISLatihanModal';
 import { AnnualDossierModal } from './components/AnnualDossierModal';
 import { VerificationReminderModal } from './components/VerificationReminderModal';
 
@@ -50,7 +50,7 @@ export default function App() {
   const [editingReport, setEditingReport] = useState<LaporanPLC | null>(null);
   const [showSchoolModal, setShowSchoolModal] = useState(false);
   const [showStaffModal, setShowStaffModal] = useState(false);
-  const [showSPLKPMModal, setShowSPLKPMModal] = useState(false);
+  const [showHRMISModal, setShowHRMISModal] = useState(false);
   const [showDossierModal, setShowDossierModal] = useState(false);
   const [showReminderModal, setShowReminderModal] = useState(false);
 
@@ -251,7 +251,7 @@ export default function App() {
         schoolInfo={schoolInfo}
         onOpenSchoolSettings={() => setShowSchoolModal(true)}
         onOpenStaffDirectory={() => setShowStaffModal(true)}
-        onOpenSPLKPM={() => setShowSPLKPMModal(true)}
+        onOpenHRMIS={() => setShowHRMISModal(true)}
         onOpenAnnualDossier={() => setShowDossierModal(true)}
         onOpenReminderModal={() => setShowReminderModal(true)}
         pendingVerificationCount={pendingCount}
@@ -269,7 +269,7 @@ export default function App() {
               setEditingReport(null);
               setCurrentTab('new-report');
             }}
-            onOpenSPLKPM={() => setShowSPLKPMModal(true)}
+            onOpenHRMIS={() => setShowHRMISModal(true)}
             onOpenAnnualDossier={() => setShowDossierModal(true)}
             onOpenReminderModal={() => setShowReminderModal(true)}
           />
@@ -367,11 +367,11 @@ export default function App() {
         />
       )}
 
-      {/* Hab e-SPLKPM Hub Modal */}
-      {showSPLKPMModal && (
-        <SPLKPMModal
+      {/* Modul Latihan 40 Jam HRMIS */}
+      {showHRMISModal && (
+        <HRMISLatihanModal
           reports={reports}
-          onClose={() => setShowSPLKPMModal(false)}
+          onClose={() => setShowHRMISModal(false)}
           lang={lang}
         />
       )}
