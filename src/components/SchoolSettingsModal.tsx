@@ -76,7 +76,8 @@ export const SchoolSettingsModal: React.FC<SchoolSettingsModalProps> = ({
                   <img
                     src={formData.logo_sekolah}
                     alt="Lencana SMK Salaping"
-                    className="max-h-full max-w-full object-contain"
+                    className="max-h-full max-w-full object-contain mix-blend-multiply"
+                    style={{ mixBlendMode: 'multiply' }}
                   />
                 ) : (
                   <School className="w-8 h-8 text-slate-400" />

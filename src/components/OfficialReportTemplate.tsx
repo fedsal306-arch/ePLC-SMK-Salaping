@@ -37,8 +37,8 @@ export const OfficialReportTemplate: React.FC<OfficialReportTemplateProps> = ({ 
             <img
               src={report.logo_sekolah}
               alt={`Lencana ${report.nama_sekolah}`}
-              className="max-h-24 max-w-24 object-contain"
-              style={{ objectFit: 'contain' }}
+              className="max-h-24 max-w-24 object-contain mix-blend-multiply"
+              style={{ objectFit: 'contain', mixBlendMode: 'multiply' }}
             />
           ) : (
             <div className="w-18 h-18 rounded-xl bg-teal-800 text-white flex flex-col items-center justify-center p-1 text-center shadow-xs">
