@@ -92,30 +92,81 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Top Banner with Export CTA */}
-      <div className="bg-gradient-to-r from-teal-800 to-emerald-900 rounded-3xl p-6 md:p-8 text-white shadow-lg relative overflow-hidden">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="px-2.5 py-0.5 rounded-full bg-teal-500/30 text-teal-200 text-xs font-bold uppercase tracking-wider border border-teal-400/30">
-                Papan Pemuka SKPM Kualiti
+      {/* Executive Dashboard Header Banner with faint watermark background */}
+      <div className="relative rounded-3xl p-6 sm:p-8 text-white shadow-xl overflow-hidden border border-teal-700/50 bg-gradient-to-r from-slate-950 via-teal-950 to-emerald-950">
+        {/* Subtle photo watermark of Pengetua Encik Sanaleh bin Daud & teacher */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+          <img
+            src="/assets/aistudio/photo_6266807531040608686_y_485d689a.jpg"
+            alt="Pengetua SMK Salaping"
+            className="w-full h-full object-cover object-[70%_35%] opacity-15 mix-blend-luminosity filter contrast-125 saturate-0"
+          />
+          {/* Subtle vignette and gradient overlay for faintness & high contrast */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-teal-950/85 to-emerald-950/75" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-teal-500/10 via-transparent to-black/40" />
+        </div>
+
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="max-w-2xl">
+            {/* Accreditation & School Badges */}
+            <div className="flex flex-wrap items-center gap-2 mb-3">
+              <span className="px-2.5 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-[11px] font-bold uppercase tracking-wider border border-teal-400/30 flex items-center gap-1.5 shadow-2xs">
+                <Sparkles className="w-3 h-3 text-amber-300" />
+                <span>SKPM Kualiti Standard 3.1.2.2</span>
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-800/80 text-slate-300 text-[11px] font-semibold border border-slate-700">
+                Kod: XEA5104
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[11px] font-bold border border-amber-400/30">
+                PPD Kota Marudu
               </span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-              {lang === 'ms' ? 'Pengurusan & Audit PLC Sekolah' : 'School PLC Audit & Management'}
-            </h2>
-            <p className="text-xs md:text-sm text-teal-100 mt-1 max-w-xl leading-relaxed">
+
+            {/* Application Title with Watermarked Identity */}
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white drop-shadow-xs flex flex-wrap items-center gap-2">
+              <span>e-PLC SMK Salaping</span>
+              <span className="text-xs sm:text-sm font-semibold text-teal-300 px-2.5 py-1 rounded-lg bg-teal-900/60 border border-teal-500/30">
+                Papan Pemuka Eksekutif
+              </span>
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-xs sm:text-sm text-teal-100/90 mt-2 leading-relaxed font-medium">
               {lang === 'ms'
-                ? 'Pantau perkembangan sesi perkongsian amalan terbaik guru, kumpul jam latihan berterusan, dan eksport data lengkap untuk audit PPD/JPN.'
-                : 'Monitor teacher professional learning sessions, accumulate CPD hours, and export audit-ready reports.'}
+                ? 'Sistem Pengurusan, Audit & Pengesahan Digital Komuniti Pembelajaran Profesional Guru di bawah seliaan Pengetua Encik Sanaleh bin Daud.'
+                : 'Executive Dashboard for Professional Learning Community audits, teacher CPD credits, and Principal endorsements.'}
             </p>
+
+            {/* Quick Status Bar */}
+            <div className="mt-4 pt-3 border-t border-teal-800/60 flex flex-wrap items-center gap-4 text-xs text-teal-200/90">
+              <div className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="font-semibold text-white">Pengetua Pengesah:</span>
+                <span className="text-amber-200 font-bold">Sanaleh bin Daud</span>
+              </div>
+              <span className="text-teal-700 hidden sm:inline">&bull;</span>
+              <div>
+                <span>Sesi Selesai Disahkan:</span>{' '}
+                <strong className="text-white font-extrabold">{stats.verifiedCount}</strong> / {stats.totalSessions}
+              </div>
+              {stats.pendingCount > 0 && (
+                <>
+                  <span className="text-teal-700 hidden sm:inline">&bull;</span>
+                  <div className="text-amber-300 font-bold flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 text-amber-400" />
+                    <span>{stats.pendingCount} sesi menunggu pengesahan</span>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
+          {/* Action CTAs */}
+          <div className="flex flex-wrap items-center gap-2.5 shrink-0">
             {onOpenSPLKPM && (
               <button
                 onClick={onOpenSPLKPM}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-teal-700/80 hover:bg-teal-700 text-white font-bold text-xs shadow-md border border-teal-500/30 transition cursor-pointer active:scale-95"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-teal-800/80 hover:bg-teal-700 text-white font-bold text-xs shadow-md border border-teal-600/40 transition cursor-pointer active:scale-95 hover:shadow-teal-900/40"
               >
                 <Award className="w-4 h-4 text-amber-300" />
                 <span>Hab e-SPLKPM</span>
@@ -125,7 +176,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             {onOpenAnnualDossier && (
               <button
                 onClick={onOpenAnnualDossier}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-teal-700/80 hover:bg-teal-700 text-white font-bold text-xs shadow-md border border-teal-500/30 transition cursor-pointer active:scale-95"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-teal-800/80 hover:bg-teal-700 text-white font-bold text-xs shadow-md border border-teal-600/40 transition cursor-pointer active:scale-95 hover:shadow-teal-900/40"
               >
                 <BookOpen className="w-4 h-4 text-teal-200" />
                 <span>Buku Tahunan PLC</span>
@@ -135,7 +186,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             {onOpenReminderModal && stats.pendingCount > 0 && (
               <button
                 onClick={onOpenReminderModal}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-amber-950 font-extrabold text-xs shadow-md transition cursor-pointer active:scale-95"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-amber-950 font-extrabold text-xs shadow-lg transition cursor-pointer active:scale-95 animate-pulse"
+                title="Hantar Peringatan WhatsApp Segera ke Pengetua"
               >
                 <Bell className="w-4 h-4" />
                 <span>Jejak Peringatan ({stats.pendingCount})</span>
@@ -144,16 +196,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
             <button
               onClick={() => exportReportsToExcel(reports)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-teal-900 font-bold text-xs sm:text-sm shadow-md hover:bg-teal-50 transition cursor-pointer active:scale-95"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs sm:text-sm shadow-md hover:shadow-lg transition cursor-pointer active:scale-95 border border-emerald-400/40"
             >
-              <FileSpreadsheet className="w-4 h-4 text-emerald-700" />
+              <FileSpreadsheet className="w-4 h-4 text-white" />
               <span>{t.btn_export_excel}</span>
             </button>
           </div>
         </div>
 
-        {/* Decorative background circle */}
-        <div className="absolute -right-10 -bottom-10 w-64 h-64 rounded-full bg-white/5 pointer-events-none" />
+        {/* Decorative subtle ambient lights */}
+        <div className="absolute -right-12 -bottom-12 w-48 h-48 rounded-full bg-emerald-500/10 blur-2xl pointer-events-none" />
+        <div className="absolute left-1/3 -top-12 w-48 h-48 rounded-full bg-teal-400/10 blur-2xl pointer-events-none" />
       </div>
 
       {/* 4 Key Stat Cards */}

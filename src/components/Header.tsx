@@ -152,34 +152,51 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Main App Navigation Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
-        {/* Brand Logo & Title */}
+        {/* Brand Logo & Title with subtle photo background */}
         <div
           onClick={() => setCurrentTab('reports')}
-          className="flex items-center gap-3 cursor-pointer group"
+          className="relative flex items-center gap-3.5 cursor-pointer group px-3.5 py-2 -my-1 rounded-2xl border border-slate-200/90 bg-white/95 hover:border-teal-500/50 hover:bg-slate-50/90 shadow-xs hover:shadow-md transition-all duration-300 overflow-hidden"
+          title="e-PLC SMK Salaping - Klik untuk kembali ke Senarai Laporan"
         >
-          {schoolInfo.logo_sekolah ? (
+          {/* Faint subtle watermark of Pengetua Encik Sanaleh bin Daud & teacher at work */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
             <img
-              src={schoolInfo.logo_sekolah}
-              alt="Lencana SMK Salaping"
-              className="w-12 h-12 object-contain drop-shadow-xs group-hover:scale-105 transition shrink-0"
+              src="/assets/aistudio/photo_6266807531040608686_y_485d689a.jpg"
+              alt=""
+              className="w-full h-full object-cover object-[70%_35%] opacity-15 filter contrast-125 saturate-50 group-hover:opacity-25 transition-opacity duration-300"
             />
-          ) : (
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-teal-700 to-emerald-600 text-white flex items-center justify-center font-black text-sm shadow-md shadow-teal-800/20 group-hover:scale-105 transition">
-              PLC
+            {/* Soft gradient mask ensuring text clarity */}
+            <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-white/90 mix-blend-lighten" />
+          </div>
+
+          <div className="relative z-10 flex items-center gap-3">
+            {schoolInfo.logo_sekolah ? (
+              <img
+                src={schoolInfo.logo_sekolah}
+                alt="Lencana SMK Salaping"
+                className="w-11 h-11 object-contain drop-shadow-xs group-hover:scale-105 transition shrink-0"
+              />
+            ) : (
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-teal-700 to-emerald-600 text-white flex items-center justify-center font-black text-sm shadow-md shadow-teal-800/20 group-hover:scale-105 transition shrink-0">
+                PLC
+              </div>
+            )}
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-lg sm:text-xl font-black tracking-tight text-slate-900 group-hover:text-teal-800 transition flex items-center gap-1.5">
+                  <span className="text-teal-700">e-PLC</span>
+                  <span className="text-slate-900">SMK Salaping</span>
+                </h1>
+                <span className="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-teal-100/90 text-teal-900 border border-teal-300/60 shadow-2xs">
+                  XEA5104
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-600 hidden sm:flex items-center gap-1.5 font-semibold">
+                <span>Pejabat Pengetua</span>
+                <span className="text-slate-400">&bull;</span>
+                <span className="text-teal-800 font-bold">En. Sanaleh bin Daud</span>
+              </p>
             </div>
-          )}
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl font-extrabold tracking-tight text-slate-900 group-hover:text-teal-700 transition">
-                {t.app_title}
-              </h1>
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-teal-100 text-teal-800 border border-teal-200">
-                SMK Salaping
-              </span>
-            </div>
-            <p className="text-xs text-slate-500 hidden sm:block font-medium">
-              {schoolInfo.nama_sekolah} &bull; {t.app_subtitle}
-            </p>
           </div>
         </div>
 
