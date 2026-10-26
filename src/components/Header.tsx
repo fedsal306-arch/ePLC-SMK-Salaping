@@ -175,7 +175,8 @@ export const Header: React.FC<HeaderProps> = ({
               <img
                 src={schoolInfo.logo_sekolah}
                 alt="Lencana SMK Salaping"
-                className="w-11 h-11 object-contain drop-shadow-xs group-hover:scale-105 transition shrink-0"
+                className="w-11 h-11 object-contain drop-shadow-xs group-hover:scale-105 transition shrink-0 mix-blend-multiply"
+                style={{ mixBlendMode: 'multiply' }}
               />
             ) : (
               <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-teal-700 to-emerald-600 text-white flex items-center justify-center font-black text-sm shadow-md shadow-teal-800/20 group-hover:scale-105 transition shrink-0">

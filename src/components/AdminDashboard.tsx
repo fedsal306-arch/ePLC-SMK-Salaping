@@ -112,7 +112,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <span className="px-2.5 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-[11px] font-bold uppercase tracking-wider border border-teal-400/30 flex items-center gap-1.5 shadow-2xs">
                 <Sparkles className="w-3 h-3 text-amber-300" />
-                <span>SKPM Kualiti Standard 3.1.2.2</span>
+                <span>Standard Kualiti Kurikulum 3.1.2.2</span>
               </span>
               <span className="px-2.5 py-0.5 rounded-full bg-slate-800/80 text-slate-300 text-[11px] font-semibold border border-slate-700">
                 Kod: XEA5105

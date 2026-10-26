@@ -69,7 +69,7 @@ export const OfficialReportTemplate: React.FC<OfficialReportTemplateProps> = ({ 
           LAPORAN SESI PERKONGSIAN GURU (PLC)
         </h1>
         <p className="text-xs font-semibold text-slate-600 uppercase tracking-widest mt-0.5">
-          PROFESSIONAL LEARNING COMMUNITY &bull; SKPM KUALITI / AUDIT SEKOLAH
+          PROFESSIONAL LEARNING COMMUNITY &bull; AUDIT KUALITI SEKOLAH
         </p>
       </div>
 

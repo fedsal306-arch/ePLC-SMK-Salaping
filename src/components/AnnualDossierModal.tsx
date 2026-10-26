@@ -77,7 +77,7 @@ export const AnnualDossierModal: React.FC<AnnualDossierModalProps> = ({
             </div>
             <div>
               <h3 className="font-extrabold text-sm sm:text-base">
-                Buku Laporan Tahunan PLC & Dossier SKPM Kualiti ({currentYear})
+                Buku Laporan Tahunan PLC & Dossier Kualiti Kurikulum ({currentYear})
               </h3>
               <p className="text-[11px] text-slate-400">
                 Kompilasi Rasmi Dokumentasi Komuniti Pembelajaran Profesional SMK Salaping
@@ -149,7 +149,7 @@ export const AnnualDossierModal: React.FC<AnnualDossierModalProps> = ({
                     {schoolInfo.nama_sekolah || 'SMK SALAPING, KOTA MARUDU'}
                   </h2>
                   <p className="text-xs font-semibold text-slate-600">
-                    KOD SEKOLAH: <span className="font-mono text-teal-900">{schoolInfo.kod_sekolah || 'XEA5104'}</span>
+                    KOD SEKOLAH: <span className="font-mono text-teal-900">{schoolInfo.kod_sekolah || 'XEA5105'}</span>
                   </p>
                 </div>
               </div>
@@ -157,7 +157,7 @@ export const AnnualDossierModal: React.FC<AnnualDossierModalProps> = ({
               {/* Title Plate */}
               <div className="my-8 py-6 px-8 bg-teal-900 text-white rounded-xl shadow-lg border-2 border-amber-400/60 max-w-2xl w-full">
                 <span className="text-[11px] font-bold text-amber-300 uppercase tracking-widest block mb-1">
-                  DOKUMEN EVIDENS AUDIT SKPM KUALITI@SEKOLAH
+                  DOKUMEN EVIDENS AUDIT KUALITI PENDIDIKAN@SEKOLAH
                 </span>
                 <h1 className="text-xl sm:text-2xl font-black tracking-wide leading-tight uppercase font-serif">
                   BUKU LAPORAN TAHUNAN KOMUNITI PEMBELAJARAN PROFESIONAL (e-PLC)
@@ -192,7 +192,7 @@ export const AnnualDossierModal: React.FC<AnnualDossierModalProps> = ({
                     Perakuan & Kata Pengantar Pengetua
                   </h3>
                   <p className="text-xs text-slate-600">
-                    Sistem Pelaporan PLC Digital SMK Salaping &bull; Standard Kualiti Pendidikan Malaysia
+                    Sistem Pelaporan PLC Digital SMK Salaping &bull; Standard Kurikulum Kebangsaan
                   </p>
                 </div>
                 <ShieldCheck className="w-8 h-8 text-teal-700" />
@@ -206,7 +206,7 @@ export const AnnualDossierModal: React.FC<AnnualDossierModalProps> = ({
                   Syukur ke hadrat Tuhan kerana dengan izin-Nya, Buku Laporan Tahunan Komuniti Pembelajaran Profesional (e-PLC) SMK Salaping bagi tahun {currentYear} berjaya didokumentasikan dengan lengkap melalui Sistem Pelaporan Digital Sekolah.
                 </p>
                 <p>
-                  Amalan PLC merupakan tunjang utama peningkatan kualiti penyampaian guru selaras dengan Standard SKPM Kualiti@Sekolah dan Pelan Pembangunan Pendidikan Malaysia (PPPM). Menerusi sesi perkongsian amalan terbaik, kajian pengajaran (Lesson Study), dan bimbingan rakan sekerja (Peer Coaching), para pendidik di SMK Salaping terus memperkukuh pedagogi bermakna demi kemenjadian murid di Kota Marudu.
+                  Amalan PLC merupakan tunjang utama peningkatan kualiti penyampaian guru selaras dengan Standard Kualiti Kurikulum dan Pelan Pembangunan Pendidikan Malaysia (PPPM). Menerusi sesi perkongsian amalan terbaik, kajian pengajaran (Lesson Study), dan bimbingan rakan sekerja (Peer Coaching), para pendidik di SMK Salaping terus memperkukuh pedagogi bermakna demi kemenjadian murid di Kota Marudu.
                 </p>
                 <p>
                   Saya merakamkan setinggi-tinggi tahniah dan perakuan kepada semua guru SMK Salaping atas iltizam serta komitmen berterusan dalam merekodkan, melaksanakan, dan mengesahkan setiap sesi perkongsian secara telus dan berintegriti.
@@ -233,7 +233,7 @@ export const AnnualDossierModal: React.FC<AnnualDossierModalProps> = ({
                   <Award className="w-6 h-6 text-teal-700 mb-1" />
                   <span className="text-[9px] font-extrabold uppercase tracking-tight">COP RASMI PENGETUA</span>
                   <span className="text-[8px] font-semibold">SMK SALAPING</span>
-                  <span className="text-[7px] text-slate-500">XEA5104 &bull; KOTA MARUDU</span>
+                  <span className="text-[7px] text-slate-500">XEA5105 &bull; KOTA MARUDU</span>
                 </div>
               </div>
             </div>
@@ -393,7 +393,7 @@ export const AnnualDossierModal: React.FC<AnnualDossierModalProps> = ({
                 DOKUMEN RASMI KOMUNITI PEMBELAJARAN PROFESIONAL (e-PLC)
               </p>
               <p className="text-[10px] mt-0.5">
-                SMK SALAPING, PETI SURAT 449, 89108 KOTA MARUDU, SABAH &bull; KOD SEKOLAH: XEA5104
+                SMK SALAPING, BEG BERKUNCI 18, 89108 KOTA MARUDU, SABAH &bull; KOD SEKOLAH: XEA5105
               </p>
               <p className="text-[9px] text-slate-400 mt-2">
                 Dijana melalui Aplikasi e-PLC Sekolah &bull; Tarikh Cetakan: {new Date().toLocaleDateString('ms-MY')}
