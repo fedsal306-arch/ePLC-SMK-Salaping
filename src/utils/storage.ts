@@ -116,7 +116,13 @@ export function getStoredSchool(): SchoolInfo {
     const raw = localStorage.getItem(STORAGE_KEY_SCHOOL);
     if (!raw) return DEFAULT_SCHOOL;
     const parsed = JSON.parse(raw);
-    if (!parsed.nama_sekolah || parsed.nama_sekolah.includes('BINTANG')) {
+    if (
+      !parsed.nama_sekolah ||
+      parsed.kod_sekolah === 'XEA5104' ||
+      parsed.alamat_sekolah?.includes('Peti Surat 449') ||
+      parsed.no_telefon === '088-661002' ||
+      parsed.nama_sekolah.includes('BINTANG')
+    ) {
       saveStoredSchool(DEFAULT_SCHOOL);
       return DEFAULT_SCHOOL;
     }

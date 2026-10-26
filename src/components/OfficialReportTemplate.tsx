@@ -52,7 +52,7 @@ export const OfficialReportTemplate: React.FC<OfficialReportTemplateProps> = ({ 
             {report.nama_sekolah || 'SMK SALAPING, KOTA MARUDU'}
           </h2>
           <p className="text-xs text-slate-700 mt-0.5 leading-snug font-medium">
-            {report.alamat_sekolah || 'Peti Surat 449, 89108 Kota Marudu, Sabah'}
+            {report.alamat_sekolah || 'SMK Salaping, Beg Berkunci 18, 89108, Kota Marudu'}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-0.5 text-[11px] text-slate-600 mt-1">
             {report.no_telefon && <span>Tel: {report.no_telefon}</span>}

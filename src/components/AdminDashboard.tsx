@@ -115,7 +115,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <span>SKPM Kualiti Standard 3.1.2.2</span>
               </span>
               <span className="px-2.5 py-0.5 rounded-full bg-slate-800/80 text-slate-300 text-[11px] font-semibold border border-slate-700">
-                Kod: XEA5104
+                Kod: XEA5105
               </span>
               <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[11px] font-bold border border-amber-400/30">
                 PPD Kota Marudu
