@@ -5,6 +5,7 @@ import { PWAInstallButton } from './PWAInstallButton';
 import { SchoolInfo } from '../utils/storage';
 import {
   Award,
+  Clock,
   BookOpen,
   LayoutDashboard,
   FileText,
@@ -31,7 +32,7 @@ interface HeaderProps {
   schoolInfo: SchoolInfo;
   onOpenSchoolSettings: () => void;
   onOpenStaffDirectory: () => void;
-  onOpenSPLKPM?: () => void;
+  onOpenHRMIS?: () => void;
   onOpenAnnualDossier?: () => void;
   onOpenReminderModal?: () => void;
   pendingVerificationCount?: number;
@@ -48,7 +49,7 @@ export const Header: React.FC<HeaderProps> = ({
   schoolInfo,
   onOpenSchoolSettings,
   onOpenStaffDirectory,
-  onOpenSPLKPM,
+  onOpenHRMIS,
   onOpenAnnualDossier,
   onOpenReminderModal,
   pendingVerificationCount = 0,
@@ -239,17 +240,17 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         </nav>
 
-        {/* Right utility buttons: PWA install, SPLKPM, Dossier, Reminders, settings */}
+        {/* Right utility buttons: PWA install, HRMIS 40 Jam, Dossier, Reminders, settings */}
         <div className="flex items-center gap-1.5 sm:gap-2 order-2 md:order-3">
-          {/* Hab e-SPLKPM */}
-          {onOpenSPLKPM && (
+          {/* Modul Latihan 40 Jam HRMIS */}
+          {onOpenHRMIS && (
             <button
-              onClick={onOpenSPLKPM}
+              onClick={onOpenHRMIS}
               className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl border border-teal-200 bg-teal-50 text-teal-800 hover:bg-teal-100 transition cursor-pointer text-xs font-bold"
-              title="Hab e-SPLKPM (Kira Mata Kredit & Jam Latihan Guru)"
+              title="Modul Latihan 40 Jam HRMIS (Pemantauan KPI LDP)"
             >
-              <Award className="w-3.5 h-3.5 text-teal-700" />
-              <span className="hidden sm:inline">e-SPLKPM</span>
+              <Clock className="w-3.5 h-3.5 text-teal-700" />
+              <span className="hidden sm:inline">HRMIS 40 Jam</span>
             </button>
           )}
 

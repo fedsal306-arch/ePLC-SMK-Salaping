@@ -26,7 +26,7 @@ interface AdminDashboardProps {
   lang: Language;
   onSelectReport: (report: LaporanPLC) => void;
   onNewReport: () => void;
-  onOpenSPLKPM?: () => void;
+  onOpenHRMIS?: () => void;
   onOpenAnnualDossier?: () => void;
   onOpenReminderModal?: () => void;
 }
@@ -36,7 +36,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   lang,
   onSelectReport,
   onNewReport,
-  onOpenSPLKPM,
+  onOpenHRMIS,
   onOpenAnnualDossier,
   onOpenReminderModal,
 }) => {
@@ -163,13 +163,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
           {/* Action CTAs */}
           <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-            {onOpenSPLKPM && (
+            {onOpenHRMIS && (
               <button
-                onClick={onOpenSPLKPM}
+                onClick={onOpenHRMIS}
                 className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-teal-800/80 hover:bg-teal-700 text-white font-bold text-xs shadow-md border border-teal-600/40 transition cursor-pointer active:scale-95 hover:shadow-teal-900/40"
               >
-                <Award className="w-4 h-4 text-amber-300" />
-                <span>Hab e-SPLKPM</span>
+                <Clock className="w-4 h-4 text-cyan-300" />
+                <span>Latihan 40 Jam HRMIS</span>
               </button>
             )}
 
