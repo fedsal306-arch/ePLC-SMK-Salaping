@@ -1,0 +1,6 @@
+{
+  "name": "e-PLC - Sistem Pelaporan PLC Digital",
+  "description": "Aplikasi PWA responsif untuk guru sekolah mengisi, mengesahkan, dan menjana laporan Sesi Perkongsian Guru (PLC) rasmi dengan sokongan offline.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

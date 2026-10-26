@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f766e" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#grad)" />
+  
+  <g transform="translate(64, 56)" filter="url(#shadow)">
+    <!-- Central decorative badge -->
+    <!-- Open Book / Collaborative Wings -->
+    <path d="M192 140 C140 100 60 105 20 120 L20 280 C60 265 140 260 192 300 C244 260 324 265 364 280 L364 120 C324 105 244 100 192 140 Z" fill="#ffffff" fill-opacity="0.95" />
+    <path d="M192 140 L192 300" stroke="#0f766e" stroke-width="8" stroke-linecap="round" />
+    
+    <!-- Community / People figures above book -->
+    <!-- Center Person -->
+    <circle cx="192" cy="70" r="28" fill="#fef08a" />
+    <path d="M152 130 C152 105 232 105 232 130 Z" fill="#fef08a" />
+    
+    <!-- Left Person -->
+    <circle cx="120" cy="85" r="22" fill="#e2e8f0" />
+    <path d="M90 135 C90 115 150 115 150 135 Z" fill="#e2e8f0" />
+
+    <!-- Right Person -->
+    <circle cx="264" cy="85" r="22" fill="#e2e8f0" />
+    <path d="M234 135 C234 115 294 115 294 135 Z" fill="#e2e8f0" />
+    
+    <!-- Checkmark Badge on Book -->
+    <circle cx="192" cy="220" r="32" fill="#10b981" />
+    <path d="M178 220 L188 230 L208 210" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+  </g>
+  
+  <!-- Text Label -->
+  <text x="256" y="440" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="52" fill="#ffffff" text-anchor="middle" letter-spacing="4">e-PLC</text>
+</svg>

@@ -1,0 +1,81 @@
+{
+  "entities": {
+    "LaporanPLC": {
+      "title": "LaporanPLC",
+      "description": "Laporan sesi perkongsian guru Professional Learning Community (PLC)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID unik laporan" },
+        "nama_sekolah": { "type": "string", "description": "Nama sekolah rasmi" },
+        "logo_sekolah": { "type": "string", "description": "URL atau data logo sekolah" },
+        "alamat_sekolah": { "type": "string", "description": "Alamat sekolah" },
+        "no_telefon": { "type": "string", "description": "Nombor telefon sekolah" },
+        "no_faks": { "type": "string", "description": "Nombor faks sekolah" },
+        "email_sekolah": { "type": "string", "description": "Emel rasmi sekolah" },
+        "kod_sekolah": { "type": "string", "description": "Kod sekolah KPM" },
+        "tempat": { "type": "string", "description": "Tempat sesi PLC" },
+        "tarikh": { "type": "string", "description": "Tarikh sesi (YYYY-MM-DD)" },
+        "hari": { "type": "string", "description": "Hari sesi (Isnin, Selasa, dsb)" },
+        "masa_mula": { "type": "string", "description": "Masa mula sesi (HH:MM)" },
+        "masa_tamat": { "type": "string", "description": "Masa tamat sesi (HH:MM)" },
+        "tempoh_jam": { "type": "number", "description": "Tempoh masa sesi dalam jam" },
+        "panitia": { "type": "string", "description": "Panitia atau unit" },
+        "tajuk_sesi": { "type": "string", "description": "Tajuk khusus sesi" },
+        "ahli_kumpulan": { "type": "array", "description": "Senarai guru ahli kumpulan PLC" },
+        "fokus_perkongsian": { "type": "array", "description": "Senarai topik fokus perbincangan" },
+        "interpretasi": { "type": "string", "description": "Aspek penting dan impak kepada pembelajaran murid" },
+        "hasil_refleksi": { "type": "string", "description": "Apa yang dipelajari dan peningkatan profesionalisme" },
+        "gambar_aktiviti": { "type": "array", "description": "Senarai gambar bukti aktiviti" },
+        "disediakan_oleh": { "type": "object", "description": "Maklumat pelapor dan tandatangan" },
+        "disahkan_oleh": { "type": "object", "description": "Maklumat pentadbir dan pengesahan" },
+        "status": { "type": "string", "enum": ["draf", "dihantar", "disahkan"], "description": "Status laporan" },
+        "created_at": { "type": "string", "description": "Tarikh cipta" },
+        "updated_at": { "type": "string", "description": "Tarikh kemaskini" }
+      },
+      "required": ["id", "nama_sekolah", "tempat", "tarikh", "status"]
+    },
+    "SekolahConfig": {
+      "title": "SekolahConfig",
+      "description": "Profil maklumat dan kepala surat sekolah",
+      "type": "object",
+      "properties": {
+        "nama_sekolah": { "type": "string" },
+        "logo_sekolah": { "type": "string" },
+        "alamat_sekolah": { "type": "string" },
+        "no_telefon": { "type": "string" },
+        "no_faks": { "type": "string" },
+        "email_sekolah": { "type": "string" },
+        "kod_sekolah": { "type": "string" }
+      },
+      "required": ["nama_sekolah"]
+    },
+    "StafSekolah": {
+      "title": "StafSekolah",
+      "description": "Direktori guru dan staf sekolah",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nama": { "type": "string" },
+        "no_kp": { "type": "string" },
+        "jawatan": { "type": "string" },
+        "panitia": { "type": "string" },
+        "email": { "type": "string" }
+      },
+      "required": ["id", "nama"]
+    }
+  },
+  "firestore": {
+    "/laporan_plc/{laporanId}": {
+      "schema": "#entities/LaporanPLC",
+      "description": "Koleksi semua laporan PLC guru SMK Salaping"
+    },
+    "/sekolah/{sekolahId}": {
+      "schema": "#entities/SekolahConfig",
+      "description": "Konfigurasi maklumat rasmi sekolah"
+    },
+    "/staf/{stafId}": {
+      "schema": "#entities/StafSekolah",
+      "description": "Senarai staf sekolah SMK Salaping"
+    }
+  }
+}
