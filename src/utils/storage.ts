@@ -22,8 +22,8 @@ export const DEFAULT_SCHOOL: SchoolInfo = {
   nama_sekolah: 'SMK Salaping, Kota Marudu',
   logo_sekolah: SMK_SALAPING_LOGO,
   alamat_sekolah: 'SMK Salaping, Beg Berkunci 18, 89108, Kota Marudu',
-  no_telefon: '088-661002',
-  no_faks: '088-661001',
+  no_telefon: '088-088661319',
+  no_faks: '088661296',
   email_sekolah: 'xea5105@moe.edu.my',
   kod_sekolah: 'XEA5105',
 };
@@ -72,12 +72,22 @@ export const INITIAL_REPORTS: LaporanPLC[] = [];
 export function getStoredReports(): LaporanPLC[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY_REPORTS);
+    const school = getStoredSchool();
     if (!raw) {
       localStorage.setItem(STORAGE_KEY_REPORTS, JSON.stringify([]));
       return [];
     }
     const parsed: LaporanPLC[] = JSON.parse(raw);
-    return parsed;
+    const migrated = parsed.map((r) => ({
+      ...r,
+      nama_sekolah: school.nama_sekolah,
+      alamat_sekolah: school.alamat_sekolah,
+      no_telefon: school.no_telefon,
+      no_faks: school.no_faks,
+      email_sekolah: school.email_sekolah,
+      kod_sekolah: school.kod_sekolah,
+    }));
+    return migrated;
   } catch (e) {
     console.error('Failed to parse stored reports', e);
     return [];

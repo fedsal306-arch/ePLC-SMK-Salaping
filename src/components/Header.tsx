@@ -189,7 +189,7 @@ export const Header: React.FC<HeaderProps> = ({
                   <span className="text-slate-900">SMK Salaping</span>
                 </h1>
                 <span className="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-teal-100/90 text-teal-900 border border-teal-300/60 shadow-2xs">
-                  XEA5104
+                  XEA5105
                 </span>
               </div>
               <p className="text-[11px] text-slate-600 hidden sm:flex items-center gap-1.5 font-semibold">

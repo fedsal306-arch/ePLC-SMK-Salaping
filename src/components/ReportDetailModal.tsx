@@ -343,7 +343,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
 
               <div className="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3 mb-4">
                 <p className="text-xs text-emerald-950 leading-relaxed font-medium">
-                  Sebagai Pengetua <strong>SMK Salaping (XEA5104)</strong>, sila turunkan tandatangan digital anda pada ruangan kanvas di bawah bagi mengesahkan pelaksanaan sesi PLC ini.
+                  Sebagai Pengetua <strong>SMK Salaping (XEA5105)</strong>, sila turunkan tandatangan digital anda pada ruangan kanvas di bawah bagi mengesahkan pelaksanaan sesi PLC ini.
                 </p>
               </div>
 

@@ -380,7 +380,7 @@ export const OfficialReportTemplate: React.FC<OfficialReportTemplateProps> = ({ 
           </div>
 
           <p className="text-[11px] leading-relaxed text-slate-600">
-            Laporan ini direkodkan secara digital dalam pangkalan data e-PLC SMK Salaping (Kod Sekolah: <span className="font-bold text-slate-900">XEA5104</span>).
+            Laporan ini direkodkan secara digital dalam pangkalan data e-PLC SMK Salaping (Kod Sekolah: <span className="font-bold text-slate-900">XEA5105</span>).
             {report.status === 'disahkan' && (
               <span> Disahkan secara digital oleh Pengetua, <strong className="text-slate-900">Encik Sanaleh bin Daud</strong> pada <strong className="text-slate-900">{report.disahkan_oleh?.tarikh_pengesahan || report.updated_at.slice(0, 10)}</strong>.</span>
             )}
