@@ -20,6 +20,7 @@ import {
   PenTool,
   RotateCcw,
   Upload,
+  Trash2,
 } from 'lucide-react';
 
 interface ReportDetailModalProps {
@@ -29,6 +30,7 @@ interface ReportDetailModalProps {
   lang: Language;
   onVerifyReport: (reportId: string, catatan: string, tandatanganDigital?: string) => void;
   onEditReport?: (report: LaporanPLC) => void;
+  onDeleteReport?: (id: string) => void;
 }
 
 export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
@@ -38,6 +40,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
   lang,
   onVerifyReport,
   onEditReport,
+  onDeleteReport,
 }) => {
   const t = translations[lang];
   const [maskIC, setMaskIC] = useState(false);
@@ -290,6 +293,29 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
               >
                 <Edit className="w-3.5 h-3.5" />
                 <span>{lang === 'ms' ? 'Kemaskini' : 'Edit'}</span>
+              </button>
+            )}
+
+            {onDeleteReport && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (
+                    window.confirm(
+                      lang === 'ms'
+                        ? 'Anda pasti ingin memadam laporan PLC ini dari sistem?'
+                        : 'Are you sure you want to delete this PLC report?'
+                    )
+                  ) {
+                    onDeleteReport(report.id);
+                    onClose();
+                  }
+                }}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 transition cursor-pointer border border-rose-200 shadow-xs"
+                title="Padam Laporan"
+              >
+                <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+                <span>{lang === 'ms' ? 'Padam Laporan' : 'Delete Report'}</span>
               </button>
             )}
           </div>

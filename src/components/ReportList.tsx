@@ -372,18 +372,26 @@ export const ReportList: React.FC<ReportListProps> = ({
                       <Eye className="w-3.5 h-3.5" />
                       <span>{lang === 'ms' ? 'Lihat' : 'View'}</span>
                     </button>
-                    {onDeleteReport && report.status === 'draf' && (
+                    {onDeleteReport && (
                       <button
+                        type="button"
                         onClick={(e) => {
+                          e.preventDefault();
                           e.stopPropagation();
-                          if (confirm(lang === 'ms' ? 'Padam draf laporan ini?' : 'Delete this draft?')) {
+                          if (
+                            window.confirm(
+                              lang === 'ms'
+                                ? 'Anda pasti ingin memadam laporan PLC ini dari sistem?'
+                                : 'Are you sure you want to delete this PLC report?'
+                            )
+                          ) {
                             onDeleteReport(report.id);
                           }
                         }}
-                        className="p-1 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50"
-                        title="Padam Draf"
+                        className="p-2 rounded-lg text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition cursor-pointer z-20 relative shadow-xs flex items-center justify-center"
+                        title="Padam Laporan"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-4 h-4 text-rose-600" />
                       </button>
                     )}
                   </div>

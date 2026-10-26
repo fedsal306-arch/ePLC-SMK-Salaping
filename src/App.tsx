@@ -328,6 +328,7 @@ export default function App() {
           lang={lang}
           onVerifyReport={handleVerifyReport}
           onEditReport={handleEditReport}
+          onDeleteReport={handleDeleteReport}
         />
       )}
 
