@@ -3,7 +3,7 @@ import { LaporanPLC, Language, UserProfile } from '../types/plc';
 import { translations } from '../utils/translations';
 import { OfficialReportTemplate } from './OfficialReportTemplate';
 import { downloadReportPDF, shareReportWhatsApp, sendVerificationLinkToPengetuaWhatsApp } from '../utils/pdfGenerator';
-import { NAMA_PENGETUA, JAWATAN_PENGETUA } from '../utils/storage';
+import { NAMA_PENGETUA, JAWATAN_PENGETUA, NAMA_PK_HEM, JAWATAN_PK_HEM } from '../utils/storage';
 import confetti from 'canvas-confetti';
 import {
   X,
@@ -28,7 +28,13 @@ interface ReportDetailModalProps {
   onClose: () => void;
   currentUser: UserProfile;
   lang: Language;
-  onVerifyReport: (reportId: string, catatan: string, tandatanganDigital?: string) => void;
+  onVerifyReport: (
+    reportId: string,
+    catatan: string,
+    tandatanganDigital?: string,
+    endorserName?: string,
+    endorserJawatan?: string
+  ) => void;
   onEditReport?: (report: LaporanPLC) => void;
   onDeleteReport?: (id: string) => void;
 }
@@ -46,6 +52,9 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
   const [maskIC, setMaskIC] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [showVerifyDialog, setShowVerifyDialog] = useState(false);
+  const [selectedEndorser, setSelectedEndorser] = useState<'pengetua' | 'pk_hem'>(
+    report.disediakan_oleh?.nama?.toLowerCase().includes('sanaleh') ? 'pk_hem' : 'pengetua'
+  );
   const [verifyCatatan, setVerifyCatatan] = useState(
     'Disahkan oleh Pengetua. Sesi perkongsian amalan terbaik PLC ini memenuhi kualiti kurikulum SMK Salaping.'
   );
@@ -197,7 +206,10 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
       pengetuaSigDataUrl ||
       (canvasRef.current && hasDrawn ? canvasRef.current.toDataURL('image/png') : undefined);
 
-    onVerifyReport(report.id, verifyCatatan, finalSig);
+    const endorserName = selectedEndorser === 'pk_hem' ? NAMA_PK_HEM : NAMA_PENGETUA;
+    const endorserJawatan = selectedEndorser === 'pk_hem' ? JAWATAN_PK_HEM : JAWATAN_PENGETUA;
+
+    onVerifyReport(report.id, verifyCatatan, finalSig, endorserName, endorserJawatan);
     setShowVerifyDialog(false);
     confetti({
       particleCount: 80,
@@ -369,8 +381,42 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
 
               <div className="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3 mb-4">
                 <p className="text-xs text-emerald-950 leading-relaxed font-medium">
-                  Sebagai Pengetua <strong>SMK Salaping (XEA5105)</strong>, sila turunkan tandatangan digital anda pada ruangan kanvas di bawah bagi mengesahkan pelaksanaan sesi PLC ini.
+                  Sila pilih pegawai pengesah dan turunkan tandatangan digital pada ruangan kanvas di bawah bagi mengesahkan pelaksanaan sesi PLC ini.
                 </p>
+              </div>
+
+              {/* Endorser Selection (Pengetua vs PK HEM) */}
+              <div className="mb-4">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Pilih Pegawai Pengesah Laporan:
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedEndorser('pengetua')}
+                    className={`p-2.5 rounded-xl border text-left text-xs font-bold transition cursor-pointer ${
+                      selectedEndorser === 'pengetua'
+                        ? 'bg-emerald-50 border-emerald-500 text-emerald-900 shadow-2xs'
+                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                    }`}
+                  >
+                    <p className="font-extrabold">{NAMA_PENGETUA}</p>
+                    <p className="text-[10px] text-slate-500 font-normal">Pengetua, SMK Salaping</p>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setSelectedEndorser('pk_hem')}
+                    className={`p-2.5 rounded-xl border text-left text-xs font-bold transition cursor-pointer ${
+                      selectedEndorser === 'pk_hem'
+                        ? 'bg-emerald-50 border-emerald-500 text-emerald-900 shadow-2xs'
+                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                    }`}
+                  >
+                    <p className="font-extrabold">{NAMA_PK_HEM}</p>
+                    <p className="text-[10px] text-slate-500 font-normal">Penolong Kanan HEM (Alternatif)</p>
+                  </button>
+                </div>
               </div>
 
               {/* Digital Canvas Signature Pad */}

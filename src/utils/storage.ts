@@ -30,14 +30,17 @@ export const DEFAULT_SCHOOL: SchoolInfo = {
 
 export const NAMA_PENGETUA = 'Sanaleh bin Daud';
 export const JAWATAN_PENGETUA = 'Pengetua, SMK Salaping';
+export const NAMA_PK_HEM = 'Arman bin Aliamat';
+export const JAWATAN_PK_HEM = 'Penolong Kanan HEM, SMK Salaping';
 
 export const DEFAULT_STAFF: StafSekolah[] = [
   { id: 'staf-pengetua', nama: 'Sanaleh bin Daud', no_kp: '730514-12-5123', jawatan: 'Pengetua', panitia: 'Pengurusan & Pentadbiran' },
+  { id: 'staf-arman', nama: 'Arman bin Aliamat', no_kp: '780912-12-5188', jawatan: 'Penolong Kanan HEM', panitia: 'Pengurusan & Pentadbiran' },
   { id: 'staf-1', nama: 'Cikgu Ahmad Farhan bin Ismail', no_kp: '860412-14-5541', jawatan: 'Guru Kanan Sains & Matematik', panitia: 'Sains' },
   { id: 'staf-2', nama: 'Puan Siti Nurhaliza binti Zulkifli', no_kp: '891005-10-5226', jawatan: 'Ketua Panitia Bahasa Melayu', panitia: 'Bahasa Melayu' },
   { id: 'staf-3', nama: 'Encik Mohd Razali bin Abdullah', no_kp: '840722-08-5933', jawatan: 'Setiausaha Transformasi HEM', panitia: 'Pendidikan Islam' },
   { id: 'staf-4', nama: 'Puan Lee Mei Ling', no_kp: '910214-14-5882', jawatan: 'Guru Cemerlang Bahasa Inggeris', panitia: 'Bahasa Inggeris' },
-  { id: 'staf-5', nama: 'Ustazah Noraini binti Hashim', no_kp: '880315-03-5114', jawatan: 'Penolong Kanan Hal Ehwal Murid', panitia: 'Pentadbiran' },
+  { id: 'staf-5', nama: 'Ustazah Noraini binti Hashim', no_kp: '880315-03-5114', jawatan: 'Penolong Kanan Pentadbiran', panitia: 'Pentadbiran' },
   { id: 'staf-7', nama: 'Cikgu Farah Wahida binti Kamaruddin', no_kp: '930819-01-6022', jawatan: 'Guru Penyelaras Bestari / ICT', panitia: 'RBT & Sains Komputer' },
   { id: 'staf-8', nama: 'Cikgu Tan Wei Keat', no_kp: '921103-07-5671', jawatan: 'Ketua Panitia Matematik', panitia: 'Matematik' },
 ];

@@ -160,7 +160,9 @@ export default function App() {
   const handleVerifyReport = async (
     reportId: string,
     catatan: string,
-    tandatanganDigital?: string
+    tandatanganDigital?: string,
+    endorserName: string = NAMA_PENGETUA,
+    endorserJawatan: string = JAWATAN_PENGETUA
   ) => {
     const today = new Date().toISOString().slice(0, 10);
     let verifiedReport: LaporanPLC | null = null;
@@ -174,13 +176,13 @@ export default function App() {
           ...r,
           status: 'disahkan' as const,
           disahkan_oleh: {
-            nama: NAMA_PENGETUA,
-            jawatan: JAWATAN_PENGETUA,
+            nama: endorserName,
+            jawatan: endorserJawatan,
             tandatangan_digital: tandatanganDigital || defaultSvg,
             tarikh_pengesahan: today,
             catatan:
               catatan ||
-              'Disahkan oleh Pengetua. Sesi perkongsian PLC ini memenuhi objektif kualiti kurikulum SMK Salaping.',
+              `Disahkan oleh ${endorserName} (${endorserJawatan}). Sesi perkongsian PLC ini memenuhi objektif kualiti kurikulum SMK Salaping.`,
           },
           updated_at: new Date().toISOString(),
           synced_online: true,
