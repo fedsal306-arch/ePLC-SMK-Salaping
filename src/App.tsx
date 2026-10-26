@@ -32,6 +32,9 @@ import { ReportDetailModal } from './components/ReportDetailModal';
 import { SchoolSettingsModal } from './components/SchoolSettingsModal';
 import { StaffDirectoryModal } from './components/StaffDirectoryModal';
 import { OfflineIndicator } from './components/OfflineIndicator';
+import { SPLKPMModal } from './components/SPLKPMModal';
+import { AnnualDossierModal } from './components/AnnualDossierModal';
+import { VerificationReminderModal } from './components/VerificationReminderModal';
 
 export default function App() {
   const [lang, setLang] = useState<Language>('ms');
@@ -47,6 +50,9 @@ export default function App() {
   const [editingReport, setEditingReport] = useState<LaporanPLC | null>(null);
   const [showSchoolModal, setShowSchoolModal] = useState(false);
   const [showStaffModal, setShowStaffModal] = useState(false);
+  const [showSPLKPMModal, setShowSPLKPMModal] = useState(false);
+  const [showDossierModal, setShowDossierModal] = useState(false);
+  const [showReminderModal, setShowReminderModal] = useState(false);
 
   // Load data on startup from Firestore with LocalStorage fallback & handle WhatsApp verify link
   useEffect(() => {
@@ -225,6 +231,8 @@ export default function App() {
     setCurrentTab('new-report');
   };
 
+  const pendingCount = reports.filter((r) => r.status === 'dihantar').length;
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
       {/* App Header */}
@@ -243,6 +251,10 @@ export default function App() {
         schoolInfo={schoolInfo}
         onOpenSchoolSettings={() => setShowSchoolModal(true)}
         onOpenStaffDirectory={() => setShowStaffModal(true)}
+        onOpenSPLKPM={() => setShowSPLKPMModal(true)}
+        onOpenAnnualDossier={() => setShowDossierModal(true)}
+        onOpenReminderModal={() => setShowReminderModal(true)}
+        pendingVerificationCount={pendingCount}
         isFirebaseConnected={isFirebaseSynced}
       />
 
@@ -257,6 +269,9 @@ export default function App() {
               setEditingReport(null);
               setCurrentTab('new-report');
             }}
+            onOpenSPLKPM={() => setShowSPLKPMModal(true)}
+            onOpenAnnualDossier={() => setShowDossierModal(true)}
+            onOpenReminderModal={() => setShowReminderModal(true)}
           />
         )}
 
@@ -348,6 +363,38 @@ export default function App() {
             }
           }}
           onClose={() => setShowStaffModal(false)}
+          lang={lang}
+        />
+      )}
+
+      {/* Hab e-SPLKPM Hub Modal */}
+      {showSPLKPMModal && (
+        <SPLKPMModal
+          reports={reports}
+          onClose={() => setShowSPLKPMModal(false)}
+          lang={lang}
+        />
+      )}
+
+      {/* Buku Laporan Tahunan PLC Dossier Modal */}
+      {showDossierModal && (
+        <AnnualDossierModal
+          reports={reports}
+          schoolInfo={schoolInfo}
+          onClose={() => setShowDossierModal(false)}
+          lang={lang}
+        />
+      )}
+
+      {/* Jejak Peringatan Pengesahan Pengetua Modal */}
+      {showReminderModal && (
+        <VerificationReminderModal
+          reports={reports}
+          onClose={() => setShowReminderModal(false)}
+          onSelectReport={(r) => {
+            setShowReminderModal(false);
+            setSelectedReport(r);
+          }}
           lang={lang}
         />
       )}

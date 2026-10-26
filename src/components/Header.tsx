@@ -17,6 +17,7 @@ import {
   Wifi,
   WifiOff,
   Database,
+  Bell,
 } from 'lucide-react';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
 
@@ -30,6 +31,10 @@ interface HeaderProps {
   schoolInfo: SchoolInfo;
   onOpenSchoolSettings: () => void;
   onOpenStaffDirectory: () => void;
+  onOpenSPLKPM?: () => void;
+  onOpenAnnualDossier?: () => void;
+  onOpenReminderModal?: () => void;
+  pendingVerificationCount?: number;
   isFirebaseConnected?: boolean;
 }
 
@@ -43,6 +48,10 @@ export const Header: React.FC<HeaderProps> = ({
   schoolInfo,
   onOpenSchoolSettings,
   onOpenStaffDirectory,
+  onOpenSPLKPM,
+  onOpenAnnualDossier,
+  onOpenReminderModal,
+  pendingVerificationCount = 0,
   isFirebaseConnected,
 }) => {
   const t = translations[lang];
@@ -213,8 +222,48 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         </nav>
 
-        {/* Right utility buttons: PWA install, school settings, staff directory */}
-        <div className="flex items-center gap-2 order-2 md:order-3">
+        {/* Right utility buttons: PWA install, SPLKPM, Dossier, Reminders, settings */}
+        <div className="flex items-center gap-1.5 sm:gap-2 order-2 md:order-3">
+          {/* Hab e-SPLKPM */}
+          {onOpenSPLKPM && (
+            <button
+              onClick={onOpenSPLKPM}
+              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl border border-teal-200 bg-teal-50 text-teal-800 hover:bg-teal-100 transition cursor-pointer text-xs font-bold"
+              title="Hab e-SPLKPM (Kira Mata Kredit & Jam Latihan Guru)"
+            >
+              <Award className="w-3.5 h-3.5 text-teal-700" />
+              <span className="hidden sm:inline">e-SPLKPM</span>
+            </button>
+          )}
+
+          {/* Buku Tahunan PLC Dossier */}
+          {onOpenAnnualDossier && (
+            <button
+              onClick={onOpenAnnualDossier}
+              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition cursor-pointer text-xs font-bold"
+              title="Buku Laporan Tahunan PLC (SKPM Kualiti)"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-teal-600" />
+              <span className="hidden lg:inline">Buku Tahunan</span>
+            </button>
+          )}
+
+          {/* Jejak Peringatan Pengesahan */}
+          {onOpenReminderModal && (
+            <button
+              onClick={onOpenReminderModal}
+              className="relative p-2 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition cursor-pointer"
+              title="Jejak Peringatan Pengesahan Pengetua"
+            >
+              <Bell className="w-4 h-4 text-slate-600" />
+              {pendingVerificationCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-500 text-white font-extrabold text-[9px] flex items-center justify-center animate-pulse">
+                  {pendingVerificationCount}
+                </span>
+              )}
+            </button>
+          )}
+
           <PWAInstallButton lang={lang} />
 
           <button

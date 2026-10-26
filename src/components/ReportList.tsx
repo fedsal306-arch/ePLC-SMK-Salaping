@@ -17,7 +17,9 @@ import {
   Trash2,
   Download,
   BookOpen,
+  MessageCircle,
 } from 'lucide-react';
+import { getReportVerificationUrl } from '../utils/qrGenerator';
 
 interface ReportListProps {
   reports: LaporanPLC[];
@@ -331,6 +333,35 @@ export const ReportList: React.FC<ReportListProps> = ({
                   </div>
 
                   <div className="flex items-center gap-1.5">
+                    {report.status === 'dihantar' && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          let phone = report.no_telefon_pengetua;
+                          if (!phone) {
+                            const input = prompt(
+                              'Masukkan nombor WhatsApp Pengetua (Sanaleh bin Daud):',
+                              '013-8889999'
+                            );
+                            if (!input) return;
+                            phone = input;
+                          }
+                          let cleanPhone = phone.replace(/\D/g, '');
+                          if (cleanPhone.startsWith('0')) cleanPhone = '6' + cleanPhone;
+                          const verifyUrl = getReportVerificationUrl(report.id);
+                          const msg = `Salam hormat Tuan Pengetua Encik Sanaleh bin Daud, peringatan mesra untuk semakan laporan PLC: *${report.fokus_perkongsian?.[0] || 'Sesi Perkongsian Guru'}* (${report.tarikh}) oleh ${report.disediakan_oleh?.nama}. Pautan pengesahan digital Tuan: ${verifyUrl}`;
+                          const waUrl = cleanPhone
+                            ? `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(msg)}`
+                            : `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+                          window.open(waUrl, '_blank');
+                        }}
+                        className="px-2 py-1 rounded-lg text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition flex items-center gap-1 cursor-pointer"
+                        title="Peringatan WhatsApp ke Pengetua"
+                      >
+                        <MessageCircle className="w-3.5 h-3.5" />
+                        <span className="hidden sm:inline">Peringatan</span>
+                      </button>
+                    )}
                     <button
                       onClick={(e) => {
                         e.stopPropagation();

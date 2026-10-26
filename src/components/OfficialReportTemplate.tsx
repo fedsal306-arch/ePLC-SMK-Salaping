@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { LaporanPLC } from '../types/plc';
 import { maskICForDisplay } from '../utils/translations';
-import { Award, CheckCircle2, Clock, Calendar, MapPin, Users, BookOpen, Image as ImageIcon } from 'lucide-react';
+import { generateVerificationQRCode, getReportVerificationUrl } from '../utils/qrGenerator';
+import { Award, CheckCircle2, Clock, Calendar, MapPin, Users, BookOpen, Image as ImageIcon, QrCode, ShieldCheck } from 'lucide-react';
 
 interface OfficialReportTemplateProps {
   report: LaporanPLC;
@@ -9,6 +10,20 @@ interface OfficialReportTemplateProps {
 }
 
 export const OfficialReportTemplate: React.FC<OfficialReportTemplateProps> = ({ report, maskIC = false }) => {
+  const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
+  const verifyUrl = getReportVerificationUrl(report.id);
+
+  useEffect(() => {
+    let isMounted = true;
+    generateVerificationQRCode(verifyUrl).then((dataUrl) => {
+      if (isMounted && dataUrl) {
+        setQrCodeDataUrl(dataUrl);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [verifyUrl]);
   return (
     <div
       id="printable-official-plc-report"
@@ -328,8 +343,59 @@ export const OfficialReportTemplate: React.FC<OfficialReportTemplateProps> = ({ 
         </div>
       </div>
 
+      {/* Official Verification QR Certificate Badge */}
+      <div className="mt-5 p-3.5 rounded-lg border-2 border-dashed border-teal-700/40 bg-teal-50/50 flex flex-col sm:flex-row items-center gap-4 text-xs">
+        <div className="shrink-0 bg-white p-1.5 rounded-md border border-teal-200 shadow-xs flex flex-col items-center">
+          {qrCodeDataUrl ? (
+            <img
+              src={qrCodeDataUrl}
+              alt="Kod QR Pengesahan Rasmi e-PLC"
+              className="w-24 h-24 object-contain"
+            />
+          ) : (
+            <div className="w-24 h-24 bg-slate-100 flex items-center justify-center text-[10px] text-slate-400">
+              <QrCode className="w-8 h-8 text-teal-700 animate-pulse" />
+            </div>
+          )}
+          <span className="text-[9px] font-bold text-teal-900 mt-1 uppercase tracking-tighter">
+            Imbas Untuk Sah
+          </span>
+        </div>
+
+        <div className="flex-1 space-y-1 text-slate-700">
+          <div className="flex items-center gap-2">
+            <span className="font-extrabold uppercase text-[11px] text-teal-900 flex items-center gap-1">
+              <ShieldCheck className="w-4 h-4 text-teal-700" />
+              Perakuan Ketulenan Digital (e-PLC SMK Salaping)
+            </span>
+            <span
+              className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                report.status === 'disahkan'
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-amber-500 text-white'
+              }`}
+            >
+              {report.status === 'disahkan' ? 'Telah Disahkan' : 'Menunggu Pengesahan'}
+            </span>
+          </div>
+
+          <p className="text-[11px] leading-relaxed text-slate-600">
+            Laporan ini direkodkan secara digital dalam pangkalan data e-PLC SMK Salaping (Kod Sekolah: <span className="font-bold text-slate-900">XEA5104</span>).
+            {report.status === 'disahkan' && (
+              <span> Disahkan secara digital oleh Pengetua, <strong className="text-slate-900">Encik Sanaleh bin Daud</strong> pada <strong className="text-slate-900">{report.disahkan_oleh?.tarikh_pengesahan || report.updated_at.slice(0, 10)}</strong>.</span>
+            )}
+          </p>
+
+          <div className="pt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[10px] text-slate-500 font-mono">
+            <span>Ref: {report.id}</span>
+            <span>&bull;</span>
+            <span className="truncate max-w-xs">{verifyUrl}</span>
+          </div>
+        </div>
+      </div>
+
       {/* Official Footnote */}
-      <div className="mt-8 pt-3 border-t border-slate-300 flex items-center justify-between text-[10px] text-slate-500">
+      <div className="mt-6 pt-3 border-t border-slate-300 flex items-center justify-between text-[10px] text-slate-500">
         <span>Sistem Pelaporan PLC Digital (e-PLC) &bull; Format Piawai KPM / SKPMg2</span>
         <span>Dicetak pada: {new Date().toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
       </div>

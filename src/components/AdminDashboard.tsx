@@ -15,13 +15,20 @@ import {
   Award,
   ChevronRight,
   TrendingUp,
+  BookOpen,
+  Bell,
+  MessageCircle,
 } from 'lucide-react';
+import { getReportVerificationUrl } from '../utils/qrGenerator';
 
 interface AdminDashboardProps {
   reports: LaporanPLC[];
   lang: Language;
   onSelectReport: (report: LaporanPLC) => void;
   onNewReport: () => void;
+  onOpenSPLKPM?: () => void;
+  onOpenAnnualDossier?: () => void;
+  onOpenReminderModal?: () => void;
 }
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({
@@ -29,6 +36,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   lang,
   onSelectReport,
   onNewReport,
+  onOpenSPLKPM,
+  onOpenAnnualDossier,
+  onOpenReminderModal,
 }) => {
   const t = translations[lang];
 
@@ -101,7 +111,37 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
+            {onOpenSPLKPM && (
+              <button
+                onClick={onOpenSPLKPM}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-teal-700/80 hover:bg-teal-700 text-white font-bold text-xs shadow-md border border-teal-500/30 transition cursor-pointer active:scale-95"
+              >
+                <Award className="w-4 h-4 text-amber-300" />
+                <span>Hab e-SPLKPM</span>
+              </button>
+            )}
+
+            {onOpenAnnualDossier && (
+              <button
+                onClick={onOpenAnnualDossier}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-teal-700/80 hover:bg-teal-700 text-white font-bold text-xs shadow-md border border-teal-500/30 transition cursor-pointer active:scale-95"
+              >
+                <BookOpen className="w-4 h-4 text-teal-200" />
+                <span>Buku Tahunan PLC</span>
+              </button>
+            )}
+
+            {onOpenReminderModal && stats.pendingCount > 0 && (
+              <button
+                onClick={onOpenReminderModal}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-amber-950 font-extrabold text-xs shadow-md transition cursor-pointer active:scale-95"
+              >
+                <Bell className="w-4 h-4" />
+                <span>Jejak Peringatan ({stats.pendingCount})</span>
+              </button>
+            )}
+
             <button
               onClick={() => exportReportsToExcel(reports)}
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-teal-900 font-bold text-xs sm:text-sm shadow-md hover:bg-teal-50 transition cursor-pointer active:scale-95"
@@ -233,6 +273,32 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      let phone = report.no_telefon_pengetua;
+                      if (!phone) {
+                        const input = prompt(
+                          'Masukkan nombor WhatsApp Pengetua (Sanaleh bin Daud):',
+                          '013-8889999'
+                        );
+                        if (!input) return;
+                        phone = input;
+                      }
+                      let cleanPhone = phone.replace(/\D/g, '');
+                      if (cleanPhone.startsWith('0')) cleanPhone = '6' + cleanPhone;
+                      const verifyUrl = getReportVerificationUrl(report.id);
+                      const msg = `Salam hormat Tuan Pengetua Encik Sanaleh bin Daud, peringatan mesra untuk semakan laporan PLC: *${report.fokus_perkongsian?.[0] || 'Sesi Perkongsian Guru'}* (${report.tarikh}) oleh ${report.disediakan_oleh?.nama}. Pautan pengesahan digital Tuan: ${verifyUrl}`;
+                      const waUrl = cleanPhone
+                        ? `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(msg)}`
+                        : `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+                      window.open(waUrl, '_blank');
+                    }}
+                    className="p-1.5 rounded-lg text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition cursor-pointer"
+                    title="Hantar peringatan mesra ke WhatsApp Pengetua Sanaleh bin Daud"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                  </button>
                   <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300">
                     {lang === 'ms' ? 'Semak Laporan' : 'Review'}
                   </span>
