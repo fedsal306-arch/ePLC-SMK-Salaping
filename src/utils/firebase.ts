@@ -6,6 +6,7 @@ import {
   getDocs,
   setDoc,
   deleteDoc,
+  getDoc,
   getDocFromServer,
   enableIndexedDbPersistence,
 } from 'firebase/firestore';
@@ -77,6 +78,20 @@ export async function deleteReportFromFirestore(reportId: string): Promise<void>
   } catch (err) {
     console.error('Error deleting report from Firestore:', err);
     throw err;
+  }
+}
+
+export async function fetchReportByIdFromFirestore(reportId: string): Promise<LaporanPLC | null> {
+  try {
+    const docRef = doc(db, 'laporan_plc', reportId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data() as LaporanPLC;
+    }
+    return null;
+  } catch (err) {
+    console.error('Error fetching report by ID from Firestore:', err);
+    return null;
   }
 }
 

@@ -1,6 +1,7 @@
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { LaporanPLC } from '../types/plc';
+import { getReportVerificationUrl } from './qrGenerator';
 
 /**
  * Generates and downloads an official A4 PDF report from the DOM element.
@@ -66,6 +67,7 @@ export async function downloadReportPDF(elementId: string, filename: string): Pr
 export function shareReportWhatsApp(report: LaporanPLC): void {
   const members = report.ahli_kumpulan?.map((a) => a.nama).join(', ') || 'Semua Ahli';
   const topics = report.fokus_perkongsian?.join('; ') || 'Sesi Perkongsian Guru';
+  const verifyUrl = getReportVerificationUrl(report.id);
 
   const text = `*LAPORAN SESI PERKONGSIAN GURU (PLC)*
 Sekolah: ${report.nama_sekolah}
@@ -81,6 +83,9 @@ ${topics}
 
 *Status:* ${report.status.toUpperCase()}
 Disediakan oleh: ${report.disediakan_oleh?.nama} (${report.disediakan_oleh?.jawatan})
+
+🔗 *Pautan Semakan & Pengesahan Digital:*
+${verifyUrl}
 
 _Dihantar melalui Sistem e-PLC Digital Sekolah_`;
 

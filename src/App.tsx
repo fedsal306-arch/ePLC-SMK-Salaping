@@ -23,6 +23,7 @@ import {
   saveSchoolToFirestore,
   fetchStaffFromFirestore,
   saveStaffToFirestore,
+  fetchReportByIdFromFirestore,
 } from './utils/firebase';
 import { Header } from './components/Header';
 import { ReportList } from './components/ReportList';
@@ -76,9 +77,20 @@ export default function App() {
     const localReports = getStoredReports();
     setReports(localReports);
 
-    if (verifyReportId && localReports.length > 0) {
+    if (verifyReportId) {
       const match = localReports.find((r) => r.id === verifyReportId);
-      if (match) setSelectedReport(match);
+      if (match) {
+        setSelectedReport(match);
+      } else {
+        fetchReportByIdFromFirestore(verifyReportId).then((cloudReport) => {
+          if (cloudReport) {
+            const updated = [cloudReport, ...localReports];
+            setReports(updated);
+            saveStoredReports(updated);
+            setSelectedReport(cloudReport);
+          }
+        });
+      }
     }
 
     // 2. Connect to Firebase Firestore
