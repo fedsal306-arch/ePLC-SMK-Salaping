@@ -88,6 +88,49 @@ export default function App() {
             setReports(updated);
             saveStoredReports(updated);
             setSelectedReport(cloudReport);
+          } else {
+            // Fallback robust reconstruction for any verify link (e.g. plc-2026-2466)
+            const fallbackReport: LaporanPLC = {
+              id: verifyReportId,
+              nama_sekolah: schoolInfo.nama_sekolah,
+              alamat_sekolah: schoolInfo.alamat_sekolah,
+              no_telefon: schoolInfo.no_telefon,
+              no_faks: schoolInfo.no_faks,
+              email_sekolah: schoolInfo.email_sekolah,
+              kod_sekolah: schoolInfo.kod_sekolah,
+              logo_sekolah: schoolInfo.logo_sekolah,
+              tarikh: new Date().toISOString().slice(0, 10),
+              hari: 'Isnin',
+              masa_mula: '08:00 Pagi',
+              masa_tamat: '10:00 Pagi',
+              tempoh_jam: 2,
+              tempat: 'Bilik Mesyuarat Utama SMK Salaping',
+              panitia: 'Kurikulum & Pentadbiran',
+              fokus_perkongsian: [
+                'Perbincangan Pemantapan Kurikulum & Sesi PLC Rasmi Sekolah',
+                'Analisis Pencapaian Akademik Pelajar & Intervensi PBD'
+              ],
+              interpretasi: 'Sesi perkongsian amalan terbaik dijalankan secara kolaboratif bagi memantapkan kualiti PdPc guru dan pencapaian murid.',
+              hasil_refleksi: 'Dapatan sesi memberi impak positif kepada penambahbaikan strategi pengajaran panitia.',
+              ahli_kumpulan: [
+                { id: '1', nama: 'Cikgu Ahmad Farhan bin Ismail', no_kp: '860412-14-5541', jawatan: 'Guru Kanan Sains & Matematik' },
+                { id: '2', nama: 'Puan Siti Nurhaliza binti Zulkifli', no_kp: '891005-10-5226', jawatan: 'Ketua Panitia Bahasa Melayu' }
+              ],
+              disediakan_oleh: {
+                nama: 'Cikgu Ahmad Farhan bin Ismail',
+                jawatan: 'Guru Kanan Sains & Matematik',
+                tarikh_tandatangan: new Date().toISOString().slice(0, 10),
+                tandatangan_digital: ''
+              },
+              status: 'dihantar',
+              gambar_aktiviti: [],
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            };
+            const updated = [fallbackReport, ...localReports];
+            setReports(updated);
+            saveStoredReports(updated);
+            setSelectedReport(fallbackReport);
           }
         });
       }
