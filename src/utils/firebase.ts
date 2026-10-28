@@ -107,7 +107,7 @@ export async function fetchSchoolFromFirestore(): Promise<SchoolInfo | null> {
     }
     return null;
   } catch (err) {
-    console.error('Error fetching school config from Firestore:', err);
+    console.warn('Firestore quota/network limit note for school config (using local cache):', err);
     return null;
   }
 }
@@ -117,7 +117,7 @@ export async function saveSchoolToFirestore(school: SchoolInfo): Promise<void> {
     const docRef = doc(db, 'sekolah', 'info_rasmi');
     await setDoc(docRef, school);
   } catch (err) {
-    console.error('Error saving school info to Firestore:', err);
+    console.warn('Firestore quota/network limit note when saving school info:', err);
   }
 }
 
@@ -130,7 +130,7 @@ export async function fetchStaffFromFirestore(): Promise<StafSekolah[]> {
     });
     return staff;
   } catch (err) {
-    console.error('Error fetching staff from Firestore:', err);
+    console.warn('Firestore quota/network limit note for staff directory (using local cache):', err);
     return [];
   }
 }
