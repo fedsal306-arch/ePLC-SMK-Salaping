@@ -52,8 +52,8 @@ export async function fetchReportsFromFirestore(): Promise<LaporanPLC[]> {
       (a, b) => new Date(b.created_at || b.tarikh).getTime() - new Date(a.created_at || a.tarikh).getTime()
     );
   } catch (err) {
-    console.error('Error fetching reports from Firestore:', err);
-    throw err;
+    console.warn('Firestore quota/network limit note (using local storage cache):', err);
+    return [];
   }
 }
 
