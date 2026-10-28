@@ -64,8 +64,8 @@ export const ReportList: React.FC<ReportListProps> = ({
         const isMember = r.ahli_kumpulan?.some((a) =>
           a.nama.toLowerCase().includes(currentUser.nama.toLowerCase())
         );
-        // Also allow viewing drafts created on this device
-        if (!isAuthor && !isMember && r.status !== 'draf') {
+        // Teachers can view all submitted and verified school reports, plus their own drafts
+        if (r.status === 'draf' && !isAuthor && !isMember) {
           return false;
         }
       }
