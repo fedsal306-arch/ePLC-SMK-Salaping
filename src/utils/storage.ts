@@ -94,7 +94,18 @@ export function saveStoredReports(reports: LaporanPLC[]): void {
   try {
     localStorage.setItem(STORAGE_KEY_REPORTS, JSON.stringify(reports));
   } catch (e) {
-    console.error('Failed to save reports to localStorage', e);
+    console.warn('LocalStorage quota exceeded. Trimming older report images to fit quota:', e);
+    try {
+      const trimmed = reports.map((r, idx) => {
+        if (idx >= 5) {
+          return { ...r, gambar_aktiviti: [] };
+        }
+        return r;
+      });
+      localStorage.setItem(STORAGE_KEY_REPORTS, JSON.stringify(trimmed));
+    } catch (err2) {
+      console.error('Failed to save reports even after trimming:', err2);
+    }
   }
 }
 
