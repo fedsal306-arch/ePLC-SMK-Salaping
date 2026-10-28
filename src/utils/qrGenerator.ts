@@ -17,15 +17,22 @@ export async function generateVerificationQRCode(url: string): Promise<string> {
     return dataUrl;
   } catch (err) {
     console.error('Failed to generate QR code:', err);
-    // Fallback simple SVG QR placeholder if generation fails
     return '';
   }
 }
 
 /**
  * Returns the public verification URL for a given report ID.
+ * Automatically targets the permanent production domain (https://e-plc-smk-salaping.vercel.app)
+ * to ensure WhatsApp links sent to mobile devices (Pengetua / PK HEM) open reliably.
  */
 export function getReportVerificationUrl(reportId: string): string {
-  if (typeof window === 'undefined') return `https://smksalaping.edu.my/?verify=${reportId}`;
-  return `${window.location.origin}${window.location.pathname}?verify=${reportId}`;
+  const productionBase = 'https://e-plc-smk-salaping.vercel.app';
+  if (typeof window === 'undefined') return `${productionBase}/?verify=${reportId}`;
+
+  const currentOrigin = window.location.origin;
+  if (currentOrigin.includes('ais-dev') || currentOrigin.includes('ais-pre') || currentOrigin.includes('run.app')) {
+    return `${productionBase}/?verify=${reportId}`;
+  }
+  return `${currentOrigin}${window.location.pathname}?verify=${reportId}`;
 }
