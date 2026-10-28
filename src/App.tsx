@@ -15,16 +15,17 @@ import {
   JAWATAN_PENGETUA,
 } from './utils/storage';
 import {
-  testFirestoreConnection,
+  fetchReportByIdFromFirestore,
   fetchReportsFromFirestore,
+  fetchSchoolFromFirestore,
+  fetchStaffFromFirestore,
   saveReportToFirestore,
   deleteReportFromFirestore,
-  fetchSchoolFromFirestore,
   saveSchoolToFirestore,
-  fetchStaffFromFirestore,
   saveStaffToFirestore,
-  fetchReportByIdFromFirestore,
+  testFirestoreConnection,
 } from './utils/firebase';
+import { getReportsFromIDB, saveReportsToIDB } from './utils/idbStorage';
 import { Header } from './components/Header';
 import { ReportList } from './components/ReportList';
 import { AdminDashboard } from './components/AdminDashboard';
@@ -73,9 +74,25 @@ export default function App() {
       saveCurrentUser(pengetuaProfile);
     }
 
-    // 1. Initial local load
+    // 1. Initial local load (localStorage + IndexedDB for massive capacity)
     const localReports = getStoredReports();
     setReports(localReports);
+
+    getReportsFromIDB().then((idbReports) => {
+      if (idbReports && idbReports.length > 0) {
+        const merged = [...idbReports];
+        localReports.forEach((lr) => {
+          if (!merged.some((m) => m.id === lr.id)) {
+            merged.push(lr);
+          }
+        });
+        setReports(merged);
+        if (verifyReportId) {
+          const matchIdb = merged.find((r) => r.id === verifyReportId);
+          if (matchIdb) setSelectedReport(matchIdb);
+        }
+      }
+    });
 
     if (verifyReportId) {
       const match = localReports.find((r) => r.id === verifyReportId);
@@ -196,6 +213,7 @@ export default function App() {
 
     setReports(updatedReports);
     saveStoredReports(updatedReports);
+    saveReportsToIDB(updatedReports);
 
     // Sync to Firebase Cloud Storage / Firestore
     try {
@@ -250,6 +268,7 @@ export default function App() {
 
     setReports(updated);
     saveStoredReports(updated);
+    saveReportsToIDB(updated);
 
     if (verifiedReport) {
       try {
@@ -270,6 +289,7 @@ export default function App() {
     const updated = reports.filter((r) => r.id !== reportId);
     setReports(updated);
     saveStoredReports(updated);
+    saveReportsToIDB(updated);
 
     try {
       await deleteReportFromFirestore(reportId);
