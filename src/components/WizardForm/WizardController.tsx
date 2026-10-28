@@ -238,29 +238,35 @@ export const WizardController: React.FC<WizardControllerProps> = ({
       return;
     }
 
-    if (!formData.disediakan_oleh?.tandatangan_digital) {
+    let sigData = formData.disediakan_oleh?.tandatangan_digital;
+    if (!sigData) {
+      const canvasEl = document.querySelector('canvas');
+      if (canvasEl) {
+        sigData = (canvasEl as HTMLCanvasElement).toDataURL('image/png');
+      }
+    }
+
+    if (!sigData) {
       setCurrentStep(6);
       setValidationError(t.alert_min_signature);
       return;
     }
 
-    if (!formData.disediakan_oleh?.nama?.trim()) {
-      setCurrentStep(6);
-      setValidationError(lang === 'ms' ? 'Sila masukkan nama pelapor.' : 'Please enter reporter name.');
-      return;
-    }
-
-    if (!formData.no_telefon_pengetua?.trim()) {
-      setCurrentStep(6);
-      setValidationError('Sila masukkan nombor WhatsApp Pengetua (Sanaleh bin Daud) untuk pautan pengesahan.');
-      return;
-    }
+    const updatedPelapor = {
+      ...(formData.disediakan_oleh || {
+        nama: currentUser.nama,
+        jawatan: currentUser.jawatan,
+        tarikh_tandatangan: new Date().toISOString().slice(0, 10),
+      }),
+      tandatangan_digital: sigData,
+    };
 
     const completedReport: LaporanPLC = {
       ...(formData as LaporanPLC),
+      disediakan_oleh: updatedPelapor,
       status: 'dihantar',
       nama_pengetua: NAMA_PENGETUA,
-      no_telefon_pengetua: formData.no_telefon_pengetua.trim(),
+      no_telefon_pengetua: (formData.no_telefon_pengetua || '').trim(),
       created_at: formData.created_at || new Date().toISOString(),
       updated_at: new Date().toISOString(),
       synced_online: isOnline,
