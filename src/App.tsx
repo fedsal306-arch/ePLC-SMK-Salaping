@@ -194,6 +194,23 @@ export default function App() {
     initFirebaseSync();
   }, []);
 
+  // Force refresh and sync data from Firestore cloud
+  const handleRefreshData = async () => {
+    try {
+      const cloudReports = await fetchReportsFromFirestore();
+      if (cloudReports && cloudReports.length > 0) {
+        setReports(cloudReports);
+        saveStoredReports(cloudReports);
+        saveReportsToIDB(cloudReports);
+        alert(lang === 'ms' ? 'Data laporan berjaya diselaraskan dengan Cloud!' : 'Reports successfully synchronized with Cloud!');
+      } else {
+        alert(lang === 'ms' ? 'Tiada laporan baharu di awan.' : 'No new reports in cloud.');
+      }
+    } catch (err) {
+      alert(lang === 'ms' ? 'Gagal menyelaraskan data. Sila semak sambungan internet.' : 'Sync failed. Please check internet connection.');
+    }
+  };
+
   // Save current user on change
   const handleUserChange = (user: UserProfile) => {
     setCurrentUser(user);
@@ -333,6 +350,7 @@ export default function App() {
         onOpenReminderModal={() => setShowReminderModal(true)}
         pendingVerificationCount={pendingCount}
         isFirebaseConnected={isFirebaseSynced}
+        onRefreshData={handleRefreshData}
       />
 
       {/* Main App Content Body */}

@@ -37,6 +37,7 @@ interface HeaderProps {
   onOpenReminderModal?: () => void;
   pendingVerificationCount?: number;
   isFirebaseConnected?: boolean;
+  onRefreshData?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -54,6 +55,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenReminderModal,
   pendingVerificationCount = 0,
   isFirebaseConnected,
+  onRefreshData,
 }) => {
   const t = translations[lang];
   const isOnline = useOnlineStatus();
@@ -102,6 +104,17 @@ export const Header: React.FC<HeaderProps> = ({
             <Database className="w-2.5 h-2.5 text-amber-400" />
             <span>Firebase Storage</span>
           </span>
+
+          {/* Refresh / Sync Cloud button */}
+          {onRefreshData && (
+            <button
+              onClick={onRefreshData}
+              className="inline-flex items-center gap-1 text-[11px] font-bold text-teal-300 bg-slate-800 hover:bg-slate-700 px-2 py-0.5 rounded border border-slate-700 transition cursor-pointer"
+              title="Segarkan / Sync laporan terkini dari Cloud"
+            >
+              <span>🔄 Segarkan</span>
+            </button>
+          )}
 
           <span className="text-slate-600 hidden sm:inline">&bull;</span>
 
