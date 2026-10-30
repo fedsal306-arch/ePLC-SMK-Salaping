@@ -159,17 +159,25 @@ export default function App() {
         await testFirestoreConnection();
         setIsFirebaseSynced(true);
 
-        // Fetch reports from Firestore
+        // Fetch reports from Firestore and merge with local reports so no report is ever lost
         const cloudReports = await fetchReportsFromFirestore();
+        const localBeforeSync = getStoredReports();
+        const merged = [...localBeforeSync];
         if (cloudReports && cloudReports.length > 0) {
-          setReports(cloudReports);
-          saveStoredReports(cloudReports);
-
-          if (verifyReportId) {
-            const matchCloud = cloudReports.find((r) => r.id === verifyReportId);
-            if (matchCloud) {
-              setSelectedReport(matchCloud);
+          cloudReports.forEach((cr) => {
+            if (!merged.some((m) => m.id === cr.id)) {
+              merged.push(cr);
             }
+          });
+        }
+        setReports(merged);
+        saveStoredReports(merged);
+        saveReportsToIDB(merged);
+
+        if (verifyReportId) {
+          const matchTarget = merged.find((r) => r.id === verifyReportId);
+          if (matchTarget) {
+            setSelectedReport(matchTarget);
           }
         }
 
