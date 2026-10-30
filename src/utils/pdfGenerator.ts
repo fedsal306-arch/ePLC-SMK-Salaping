@@ -36,19 +36,19 @@ export async function downloadReportPDF(elementId: string, filename: string): Pr
     const imgWidth = pdfWidth;
     const imgHeight = (canvas.height * pdfWidth) / canvas.width;
 
-    let heightLeft = imgHeight;
-    let position = 0;
-
-    // First page
-    pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
-    heightLeft -= pdfHeight;
-
-    // Multi-page support if report is long with multiple photos
-    while (heightLeft > 0) {
-      position = heightLeft - imgHeight;
-      pdf.addPage();
+    if (imgHeight <= pdfHeight * 1.4) {
+      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, imgHeight);
+    } else {
+      let heightLeft = imgHeight;
+      let position = 0;
       pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
       heightLeft -= pdfHeight;
+      while (heightLeft > 0) {
+        position -= pdfHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pdfHeight;
+      }
     }
 
     pdf.save(`${filename}.pdf`);
