@@ -116,3 +116,47 @@ export async function compressImage(file: File, maxDimension = 1280, quality = 0
     });
   }
 }
+
+/**
+ * Automatically removes black background pixels from school logo/crest images using canvas image data processing.
+ */
+export function removeBlackBackground(imageSrc: string): Promise<string> {
+  return new Promise((resolve) => {
+    if (!imageSrc) {
+      resolve(imageSrc);
+      return;
+    }
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        resolve(imageSrc);
+        return;
+      }
+      ctx.drawImage(img, 0, 0);
+      try {
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imgData.data;
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          // If pixel is dark/black background, make transparent
+          if (r < 50 && g < 50 && b < 50) {
+            data[i + 3] = 0;
+          }
+        }
+        ctx.putImageData(imgData, 0, 0);
+        resolve(canvas.toDataURL('image/png'));
+      } catch (err) {
+        resolve(imageSrc);
+      }
+    };
+    img.onerror = () => resolve(imageSrc);
+    img.src = imageSrc;
+  });
+}

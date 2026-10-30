@@ -3,6 +3,7 @@ import { LaporanPLC } from '../types/plc';
 import { maskICForDisplay } from '../utils/translations';
 import { generateVerificationQRCode, getReportVerificationUrl } from '../utils/qrGenerator';
 import { Award, CheckCircle2, Clock, Calendar, MapPin, Users, BookOpen, Image as ImageIcon, QrCode, ShieldCheck } from 'lucide-react';
+import { removeBlackBackground } from '../utils/imageCompressor';
 
 interface OfficialReportTemplateProps {
   report: LaporanPLC;
@@ -11,7 +12,14 @@ interface OfficialReportTemplateProps {
 
 export const OfficialReportTemplate: React.FC<OfficialReportTemplateProps> = ({ report, maskIC = false }) => {
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
+  const [cleanLogo, setCleanLogo] = useState(report.logo_sekolah);
   const verifyUrl = getReportVerificationUrl(report.id);
+
+  useEffect(() => {
+    if (report.logo_sekolah) {
+      removeBlackBackground(report.logo_sekolah).then(setCleanLogo);
+    }
+  }, [report.logo_sekolah]);
 
   useEffect(() => {
     let isMounted = true;
@@ -35,7 +43,7 @@ export const OfficialReportTemplate: React.FC<OfficialReportTemplateProps> = ({ 
         <div className="w-24 h-24 shrink-0 flex items-center justify-center p-0.5 bg-white">
           {report.logo_sekolah ? (
             <img
-              src={report.logo_sekolah}
+              src={cleanLogo}
               alt={`Lencana ${report.nama_sekolah}`}
               className="max-h-24 max-w-24 object-contain"
               style={{ objectFit: 'contain' }}

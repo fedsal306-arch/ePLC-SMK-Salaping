@@ -21,6 +21,7 @@ import {
   Bell,
 } from 'lucide-react';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
+import { removeBlackBackground } from '../utils/imageCompressor';
 
 interface HeaderProps {
   currentTab: 'dashboard' | 'reports' | 'new-report';
@@ -78,6 +79,13 @@ export const Header: React.FC<HeaderProps> = ({
       jawatan: nextJawatan,
     });
   };
+
+  const [cleanLogo, setCleanLogo] = React.useState(schoolInfo.logo_sekolah);
+  React.useEffect(() => {
+    if (schoolInfo.logo_sekolah) {
+      removeBlackBackground(schoolInfo.logo_sekolah).then(setCleanLogo);
+    }
+  }, [schoolInfo.logo_sekolah]);
 
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
@@ -185,12 +193,13 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="relative z-10 flex items-center gap-3">
             {schoolInfo.logo_sekolah ? (
-              <img
-                src={schoolInfo.logo_sekolah}
-                alt="Lencana SMK Salaping"
-                className="w-11 h-11 object-contain drop-shadow-xs group-hover:scale-105 transition shrink-0 mix-blend-multiply"
-                style={{ mixBlendMode: 'multiply' }}
-              />
+              <div className="w-11 h-11 bg-white rounded-xl flex items-center justify-center overflow-hidden shrink-0 shadow-2xs">
+                <img
+                  src={cleanLogo}
+                  alt="Lencana SMK Salaping"
+                  className="w-full h-full object-contain group-hover:scale-105 transition"
+                />
+              </div>
             ) : (
               <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-teal-700 to-emerald-600 text-white flex items-center justify-center font-black text-sm shadow-md shadow-teal-800/20 group-hover:scale-105 transition shrink-0">
                 PLC
