@@ -8,30 +8,23 @@ import {
   deleteDoc,
   getDoc,
   getDocFromServer,
-  enableIndexedDbPersistence,
 } from 'firebase/firestore';
 import firebaseConfig from '../../firebase-applet-config.json';
 import { LaporanPLC, StafSekolah } from '../types/plc';
-import { SchoolInfo, DEFAULT_SCHOOL } from './storage';
+import { SchoolInfo } from './storage';
 
 // Initialize Firebase App
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore with specific database ID (CRITICAL: Required for this environment)
+// Initialize Firestore with specific database ID
 export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 
-// Test connection on boot
+// Test connection on boot (silent)
 export async function testFirestoreConnection(): Promise<boolean> {
   try {
     await getDocFromServer(doc(db, 'test', 'connection'));
-    console.log('Firebase Firestore connection verified.');
     return true;
-  } catch (error) {
-    if (error instanceof Error && error.message.includes('the client is offline')) {
-      console.warn('Firebase client is offline. Local cache will be used.');
-    } else {
-      console.log('Firebase initialized. Ready for operations.');
-    }
+  } catch {
     return true;
   }
 }
@@ -47,12 +40,10 @@ export async function fetchReportsFromFirestore(): Promise<LaporanPLC[]> {
     querySnapshot.forEach((docSnap) => {
       reports.push(docSnap.data() as LaporanPLC);
     });
-    // Sort descending by date
     return reports.sort(
       (a, b) => new Date(b.created_at || b.tarikh).getTime() - new Date(a.created_at || a.tarikh).getTime()
     );
-  } catch (err) {
-    console.warn('Firestore quota/network limit note (using local storage cache):', err);
+  } catch {
     return [];
   }
 }
@@ -66,7 +57,6 @@ export async function saveReportToFirestore(report: LaporanPLC): Promise<void> {
       updated_at: new Date().toISOString(),
     });
   } catch (err) {
-    console.error('Error saving report to Firestore:', err);
     throw err;
   }
 }
@@ -76,7 +66,6 @@ export async function deleteReportFromFirestore(reportId: string): Promise<void>
     const docRef = doc(db, 'laporan_plc', reportId);
     await deleteDoc(docRef);
   } catch (err) {
-    console.error('Error deleting report from Firestore:', err);
     throw err;
   }
 }
@@ -89,8 +78,7 @@ export async function fetchReportByIdFromFirestore(reportId: string): Promise<La
       return docSnap.data() as LaporanPLC;
     }
     return null;
-  } catch (err) {
-    console.error('Error fetching report by ID from Firestore:', err);
+  } catch {
     return null;
   }
 }
@@ -106,8 +94,7 @@ export async function fetchSchoolFromFirestore(): Promise<SchoolInfo | null> {
       return docSnap.docs[0].data() as SchoolInfo;
     }
     return null;
-  } catch (err) {
-    console.warn('Firestore quota/network limit note for school config (using local cache):', err);
+  } catch {
     return null;
   }
 }
@@ -116,9 +103,7 @@ export async function saveSchoolToFirestore(school: SchoolInfo): Promise<void> {
   try {
     const docRef = doc(db, 'sekolah', 'info_rasmi');
     await setDoc(docRef, school);
-  } catch (err) {
-    console.warn('Firestore quota/network limit note when saving school info:', err);
-  }
+  } catch {}
 }
 
 export async function fetchStaffFromFirestore(): Promise<StafSekolah[]> {
@@ -129,8 +114,7 @@ export async function fetchStaffFromFirestore(): Promise<StafSekolah[]> {
       staff.push(d.data() as StafSekolah);
     });
     return staff;
-  } catch (err) {
-    console.warn('Firestore quota/network limit note for staff directory (using local cache):', err);
+  } catch {
     return [];
   }
 }
@@ -141,7 +125,5 @@ export async function saveStaffToFirestore(staffList: StafSekolah[]): Promise<vo
       const docRef = doc(db, 'staf', member.id);
       await setDoc(docRef, member);
     }
-  } catch (err) {
-    console.error('Error saving staff to Firestore:', err);
-  }
+  } catch {}
 }
