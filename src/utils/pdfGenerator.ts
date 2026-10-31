@@ -14,7 +14,7 @@ export async function downloadReportPDF(elementId: string, filename: string): Pr
   }
 
   try {
-    // Generate high-resolution canvas
+    // Generate high-resolution canvas with oklch color override for html2canvas
     const canvas = await html2canvas(element, {
       scale: 2,
       useCORS: true,
@@ -22,6 +22,37 @@ export async function downloadReportPDF(elementId: string, filename: string): Pr
       backgroundColor: '#ffffff',
       windowWidth: element.scrollWidth,
       windowHeight: element.scrollHeight,
+      onclone: (clonedDoc) => {
+        const style = clonedDoc.createElement('style');
+        style.innerHTML = `
+          * {
+            color-scheme: light !important;
+          }
+          :root {
+            --color-slate-50: #f8fafc !important;
+            --color-slate-100: #f1f5f9 !important;
+            --color-slate-200: #e2e8f0 !important;
+            --color-slate-300: #cbd5e1 !important;
+            --color-slate-400: #94a3b8 !important;
+            --color-slate-500: #64748b !important;
+            --color-slate-600: #475569 !important;
+            --color-slate-700: #334155 !important;
+            --color-slate-800: #1e293b !important;
+            --color-slate-900: #0f172a !important;
+            --color-slate-950: #020617 !important;
+            --color-teal-600: #0d9488 !important;
+            --color-teal-700: #0f766e !important;
+            --color-teal-800: #115e59 !important;
+            --color-emerald-100: #d1fae5 !important;
+            --color-emerald-800: #065f46 !important;
+            --color-blue-100: #dbeafe !important;
+            --color-blue-800: #1e40af !important;
+            --color-amber-100: #fef3c7 !important;
+            --color-amber-800: #92400e !important;
+          }
+        `;
+        clonedDoc.head.appendChild(style);
+      },
     });
 
     const imgData = canvas.toDataURL('image/jpeg', 0.95);
