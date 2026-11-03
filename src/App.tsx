@@ -405,7 +405,16 @@ export default function App() {
 
   // Delete report
   const handleDeleteReport = async (reportId: string) => {
-    // 1. Immediately update local state & storage for instant feedback
+    // 1. Add to deleted blacklist permanently so it never gets restored by sync
+    try {
+      const deletedIds = JSON.parse(localStorage.getItem('eplc_deleted_ids') || '[]');
+      if (!deletedIds.includes(reportId)) {
+        deletedIds.push(reportId);
+        localStorage.setItem('eplc_deleted_ids', JSON.stringify(deletedIds));
+      }
+    } catch {}
+
+    // 2. Immediately update local state & storage
     const updated = reports.filter((r) => r.id !== reportId);
     setReports(updated);
     saveStoredReports(updated);
@@ -415,7 +424,7 @@ export default function App() {
       setSelectedReport(null);
     }
 
-    // 2. Delete from Firestore cloud in background
+    // 3. Delete from Firestore cloud in background
     try {
       await deleteReportFromFirestore(reportId);
     } catch {}
