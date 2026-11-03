@@ -8,6 +8,7 @@ import {
   deleteDoc,
   getDoc,
   getDocFromServer,
+  setLogLevel,
 } from 'firebase/firestore';
 import firebaseConfig from '../../firebase-applet-config.json';
 import { LaporanPLC, StafSekolah } from '../types/plc';
@@ -18,6 +19,7 @@ const app = initializeApp(firebaseConfig);
 
 // Initialize Firestore with specific database ID
 export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+setLogLevel('silent');
 
 // Test connection on boot (silent)
 export async function testFirestoreConnection(): Promise<boolean> {

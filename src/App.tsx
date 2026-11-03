@@ -276,33 +276,52 @@ export default function App() {
     saveCurrentUser(user);
   };
 
-  // Save new or updated report (sync to Firestore + local storage)
+  // Save new or updated report (sync to Firestore + local storage with pending queue)
   const handleSaveReport = async (newReport: LaporanPLC) => {
     let updatedReports: LaporanPLC[];
     const exists = reports.some((r) => r.id === newReport.id);
 
+    let isSynced = false;
+    let reportToSave = { ...newReport };
+
+    try {
+      await saveReportToFirestore(reportToSave);
+      isSynced = true;
+      setIsFirebaseSynced(true);
+      reportToSave.synced_online = true;
+    } catch {
+      reportToSave.synced_online = false;
+      try {
+        const queue = JSON.parse(localStorage.getItem('eplc_pending_sync') || '[]');
+        if (!queue.includes(reportToSave.id)) {
+          queue.push(reportToSave.id);
+          localStorage.setItem('eplc_pending_sync', JSON.stringify(queue));
+        }
+      } catch {}
+    }
+
     if (exists) {
-      updatedReports = reports.map((r) => (r.id === newReport.id ? newReport : r));
+      updatedReports = reports.map((r) => (r.id === reportToSave.id ? reportToSave : r));
     } else {
-      updatedReports = [newReport, ...reports];
+      updatedReports = [reportToSave, ...reports];
     }
 
     setReports(updatedReports);
     saveStoredReports(updatedReports);
     saveReportsToIDB(updatedReports);
 
-    // Sync to Firebase Cloud Storage / Firestore
-    try {
-      await saveReportToFirestore(newReport);
-      setIsFirebaseSynced(true);
-    } catch (e) {
-      console.warn('Saved locally, will sync to Firebase when online:', e);
+    if (!isSynced) {
+      alert(
+        lang === 'ms'
+          ? 'Laporan berjaya disimpan pada peranti. Sila tekan butang "🔄 Segarkan" di atas untuk memuat naik laporan ke pangkalan data awan.'
+          : 'Report saved locally. Please click "🔄 Segarkan" to upload to cloud database.'
+      );
     }
 
     // Switch to preview of newly saved report
     setEditingReport(null);
     setCurrentTab('reports');
-    setSelectedReport(newReport);
+    setSelectedReport(reportToSave);
   };
 
   // Admin verification action (sync to Firestore + local storage)
