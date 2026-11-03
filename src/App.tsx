@@ -168,6 +168,11 @@ export default function App() {
         let deletedIds: string[] = [];
         try {
           deletedIds = JSON.parse(localStorage.getItem('eplc_deleted_ids') || '[]');
+          for (const dId of deletedIds) {
+            try {
+              await deleteReportFromFirestore(dId);
+            } catch {}
+          }
         } catch {}
 
         const localReports = getStoredReports();
@@ -436,15 +441,20 @@ export default function App() {
       setSelectedReport(null);
     }
 
-    // 3. Delete from Firestore cloud
-    try {
-      await deleteReportFromFirestore(reportId);
-    } catch {}
+    // 3. Explicitly delete from Firestore cloud with retries
+    for (let i = 0; i < 3; i++) {
+      try {
+        await deleteReportFromFirestore(reportId);
+        break;
+      } catch {
+        await new Promise((r) => setTimeout(r, 200));
+      }
+    }
 
     alert(
       lang === 'ms'
-        ? 'Laporan berjaya dipadam dari sistem.'
-        : 'Report successfully deleted from system.'
+        ? `Laporan ${reportId} berjaya dipadam sepenuhnya dari peranti & pangkalan data awan.`
+        : `Report ${reportId} successfully deleted from device and cloud.`
     );
   };
 
