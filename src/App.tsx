@@ -159,17 +159,34 @@ export default function App() {
         await testFirestoreConnection();
         setIsFirebaseSynced(true);
 
-        // Fetch reports from Firestore and merge with local reports so no report is ever lost
+        // Fetch reports from Firestore and merge with local reports, prioritizing cloud verification status & updates
         const cloudReports = await fetchReportsFromFirestore();
         const localBeforeSync = getStoredReports();
-        const merged = [...localBeforeSync];
+        const reportMap = new Map<string, LaporanPLC>();
+
+        localBeforeSync.forEach((r) => {
+          reportMap.set(r.id, r);
+        });
+
         if (cloudReports && cloudReports.length > 0) {
           cloudReports.forEach((cr) => {
-            if (!merged.some((m) => m.id === cr.id)) {
-              merged.push(cr);
+            const existing = reportMap.get(cr.id);
+            if (!existing) {
+              reportMap.set(cr.id, cr);
+            } else {
+              const cloudTime = new Date(cr.updated_at || cr.tarikh).getTime();
+              const localTime = new Date(existing.updated_at || existing.tarikh).getTime();
+              if ((cr.status === 'disahkan' && existing.status !== 'disahkan') || cloudTime >= localTime) {
+                reportMap.set(cr.id, cr);
+              }
             }
           });
         }
+
+        const merged = Array.from(reportMap.values()).sort(
+          (a, b) => new Date(b.created_at || b.tarikh).getTime() - new Date(a.created_at || a.tarikh).getTime()
+        );
+
         setReports(merged);
         saveStoredReports(merged);
         saveReportsToIDB(merged);
@@ -209,20 +226,34 @@ export default function App() {
       for (const r of localReports) {
         try {
           await saveReportToFirestore(r);
-        } catch (e) {
-          console.warn('Sync push note:', e);
-        }
+        } catch {}
       }
 
       const cloudReports = await fetchReportsFromFirestore();
-      const merged = [...localReports];
+      const reportMap = new Map<string, LaporanPLC>();
+
+      localReports.forEach((r) => {
+        reportMap.set(r.id, r);
+      });
+
       if (cloudReports && cloudReports.length > 0) {
         cloudReports.forEach((cr) => {
-          if (!merged.some((m) => m.id === cr.id)) {
-            merged.push(cr);
+          const existing = reportMap.get(cr.id);
+          if (!existing) {
+            reportMap.set(cr.id, cr);
+          } else {
+            const cloudTime = new Date(cr.updated_at || cr.tarikh).getTime();
+            const localTime = new Date(existing.updated_at || existing.tarikh).getTime();
+            if ((cr.status === 'disahkan' && existing.status !== 'disahkan') || cloudTime >= localTime) {
+              reportMap.set(cr.id, cr);
+            }
           }
         });
       }
+
+      const merged = Array.from(reportMap.values()).sort(
+        (a, b) => new Date(b.created_at || b.tarikh).getTime() - new Date(a.created_at || a.tarikh).getTime()
+      );
 
       setReports(merged);
       saveStoredReports(merged);
@@ -230,17 +261,12 @@ export default function App() {
 
       alert(
         lang === 'ms'
-          ? `Penyelarasan Berjaya! ${merged.length} laporan diselaraskan antara peranti & awan.`
+          ? `Penyelarasan Berjaya! ${merged.length} laporan diselaraskan.`
           : `Sync Successful! ${merged.length} reports synchronized.`
       );
-    } catch (err) {
+    } catch {
       const localReports = getStoredReports();
       setReports(localReports);
-      alert(
-        lang === 'ms'
-          ? `Mod Luar Talian: Mempamerkan ${localReports.length} laporan tempatan.`
-          : `Offline mode: Showing ${localReports.length} local reports.`
-      );
     }
   };
 
