@@ -159,9 +159,16 @@ export default function App() {
         await testFirestoreConnection();
         setIsFirebaseSynced(true);
 
-        // Fetch reports from Firestore and merge with local reports, prioritizing cloud verification status & updates
-        const cloudReports = await fetchReportsFromFirestore();
+        // 1. Push all local reports to cloud first (automatic auto-sync across devices)
         const localBeforeSync = getStoredReports();
+        for (const r of localBeforeSync) {
+          try {
+            await saveReportToFirestore(r);
+          } catch {}
+        }
+
+        // 2. Fetch reports from Firestore and merge with local reports, prioritizing cloud verification status & updates
+        const cloudReports = await fetchReportsFromFirestore();
         const reportMap = new Map<string, LaporanPLC>();
 
         localBeforeSync.forEach((r) => {
@@ -211,9 +218,7 @@ export default function App() {
           setStaffList(cloudStaff);
           saveStoredStaff(cloudStaff);
         }
-      } catch (err) {
-        console.warn('Firestore initial sync note:', err);
-      }
+      } catch {}
     }
 
     initFirebaseSync();
