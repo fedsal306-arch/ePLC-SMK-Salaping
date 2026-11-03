@@ -69,12 +69,18 @@ export function getStoredReports(): LaporanPLC[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY_REPORTS);
     const school = getStoredSchool();
+    let deletedIds: string[] = [];
+    try {
+      deletedIds = JSON.parse(localStorage.getItem('eplc_deleted_ids') || '[]');
+    } catch {}
+
     if (!raw) {
       localStorage.setItem(STORAGE_KEY_REPORTS, JSON.stringify([]));
       return [];
     }
     const parsed: LaporanPLC[] = JSON.parse(raw);
-    const migrated = parsed.map((r) => {
+    const filtered = parsed.filter((r) => !deletedIds.includes(r.id));
+    const migrated = filtered.map((r) => {
       let pelapor = r.disediakan_oleh;
       if (pelapor && pelapor.nama === 'Cikgu Ahmad Farhan bin Ismail') {
         pelapor = {
@@ -95,8 +101,7 @@ export function getStoredReports(): LaporanPLC[] {
       };
     });
     return migrated;
-  } catch (e) {
-    console.error('Failed to parse stored reports', e);
+  } catch {
     return [];
   }
 }

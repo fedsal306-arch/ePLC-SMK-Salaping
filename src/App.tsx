@@ -159,11 +159,16 @@ export default function App() {
         await testFirestoreConnection();
         setIsFirebaseSynced(true);
 
+        let deletedIds: string[] = [];
+        try {
+          deletedIds = JSON.parse(localStorage.getItem('eplc_deleted_ids') || '[]');
+        } catch {}
+
         const localReports = getStoredReports();
         const idbReports = await getReportsFromIDB();
         const allLocalMap = new Map<string, LaporanPLC>();
         [...localReports, ...idbReports].forEach((r) => {
-          if (r && r.id) allLocalMap.set(r.id, r);
+          if (r && r.id && !deletedIds.includes(r.id)) allLocalMap.set(r.id, r);
         });
         const localList = Array.from(allLocalMap.values());
 
@@ -179,6 +184,7 @@ export default function App() {
 
         if (cloudReports && cloudReports.length > 0) {
           cloudReports.forEach((cr) => {
+            if (deletedIds.includes(cr.id)) return;
             const existing = masterMap.get(cr.id);
             if (!existing) {
               masterMap.set(cr.id, cr);
@@ -227,17 +233,25 @@ export default function App() {
   // Force bi-directional refresh and sync data between device and Firestore cloud
   const handleRefreshData = async () => {
     try {
+      let deletedIds: string[] = [];
+      try {
+        deletedIds = JSON.parse(localStorage.getItem('eplc_deleted_ids') || '[]');
+      } catch {}
+
       const localReports = getStoredReports();
       const idbReports = await getReportsFromIDB();
       const allLocalMap = new Map<string, LaporanPLC>();
       [...localReports, ...idbReports].forEach((r) => {
-        if (r && r.id) allLocalMap.set(r.id, r);
+        if (r && r.id && !deletedIds.includes(r.id)) allLocalMap.set(r.id, r);
       });
       const localList = Array.from(allLocalMap.values());
 
+      let syncedCount = 0;
       for (const r of localList) {
         try {
           await saveReportToFirestore(r);
+          syncedCount++;
+          await new Promise((resolve) => setTimeout(resolve, 80));
         } catch {}
       }
 
@@ -247,6 +261,7 @@ export default function App() {
 
       if (cloudReports && cloudReports.length > 0) {
         cloudReports.forEach((cr) => {
+          if (deletedIds.includes(cr.id)) return;
           const existing = masterMap.get(cr.id);
           if (!existing) {
             masterMap.set(cr.id, cr);
@@ -270,8 +285,8 @@ export default function App() {
 
       alert(
         lang === 'ms'
-          ? `Penyelarasan Master Berjaya! Jumlah keseluruhan: ${merged.length} laporan diselaraskan.`
-          : `Master Sync Successful! Total ${merged.length} reports synchronized.`
+          ? `Penyelarasan Master Berjaya! Berjaya muat naik ${syncedCount} laporan ke Awan. Jumlah keseluruhan: ${merged.length} laporan.`
+          : `Master Sync Successful! Uploaded ${syncedCount} reports to Cloud. Total: ${merged.length}.`
       );
     } catch {
       const localReports = getStoredReports();
