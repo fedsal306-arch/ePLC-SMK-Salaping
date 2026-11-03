@@ -74,15 +74,26 @@ export function getStoredReports(): LaporanPLC[] {
       return [];
     }
     const parsed: LaporanPLC[] = JSON.parse(raw);
-    const migrated = parsed.map((r) => ({
-      ...r,
-      nama_sekolah: school.nama_sekolah,
-      alamat_sekolah: school.alamat_sekolah,
-      no_telefon: school.no_telefon,
-      no_faks: school.no_faks,
-      email_sekolah: school.email_sekolah,
-      kod_sekolah: school.kod_sekolah,
-    }));
+    const migrated = parsed.map((r) => {
+      let pelapor = r.disediakan_oleh;
+      if (pelapor && pelapor.nama === 'Cikgu Ahmad Farhan bin Ismail') {
+        pelapor = {
+          ...pelapor,
+          nama: 'Cikgu Pelapor PLC',
+          jawatan: pelapor.jawatan === 'Guru Kanan Sains & Matematik' ? 'Guru Akademik' : (pelapor.jawatan || 'Guru Akademik'),
+        };
+      }
+      return {
+        ...r,
+        disediakan_oleh: pelapor,
+        nama_sekolah: school.nama_sekolah,
+        alamat_sekolah: school.alamat_sekolah,
+        no_telefon: school.no_telefon,
+        no_faks: school.no_faks,
+        email_sekolah: school.email_sekolah,
+        kod_sekolah: school.kod_sekolah,
+      };
+    });
     return migrated;
   } catch (e) {
     console.error('Failed to parse stored reports', e);

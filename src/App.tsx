@@ -388,22 +388,22 @@ export default function App() {
     }
   };
 
-  // Delete draft report
+  // Delete report
   const handleDeleteReport = async (reportId: string) => {
+    // 1. Immediately update local state & storage for instant feedback
     const updated = reports.filter((r) => r.id !== reportId);
     setReports(updated);
     saveStoredReports(updated);
-    saveReportsToIDB(updated);
-
-    try {
-      await deleteReportFromFirestore(reportId);
-    } catch (err) {
-      console.warn('Firestore delete error:', err);
-    }
+    await saveReportsToIDB(updated);
 
     if (selectedReport?.id === reportId) {
       setSelectedReport(null);
     }
+
+    // 2. Delete from Firestore cloud in background
+    try {
+      await deleteReportFromFirestore(reportId);
+    } catch {}
   };
 
   const handleEditReport = (report: LaporanPLC) => {

@@ -55,7 +55,17 @@ export const WizardController: React.FC<WizardControllerProps> = ({
   // Initial State setup
   const [formData, setFormData] = useState<Partial<LaporanPLC>>(() => {
     if (editingReport) {
-      return { ...editingReport };
+      const rep = { ...editingReport };
+      if (!rep.disediakan_oleh?.nama || rep.disediakan_oleh.nama === 'Cikgu Ahmad Farhan bin Ismail') {
+        rep.disediakan_oleh = {
+          ...(rep.disediakan_oleh || {}),
+          nama: currentUser.nama,
+          jawatan: currentUser.jawatan,
+          tarikh_tandatangan: rep.disediakan_oleh?.tarikh_tandatangan || new Date().toISOString().slice(0, 10),
+          tandatangan_digital: rep.disediakan_oleh?.tandatangan_digital || null,
+        };
+      }
+      return rep;
     }
 
     const saved = getSavedDraft();
