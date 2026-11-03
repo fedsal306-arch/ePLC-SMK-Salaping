@@ -159,44 +159,46 @@ export default function App() {
         await testFirestoreConnection();
         setIsFirebaseSynced(true);
 
-        // 1. Push all local reports to cloud first (automatic auto-sync across devices)
-        const localBeforeSync = getStoredReports();
-        for (const r of localBeforeSync) {
+        const localReports = getStoredReports();
+        const idbReports = await getReportsFromIDB();
+        const allLocalMap = new Map<string, LaporanPLC>();
+        [...localReports, ...idbReports].forEach((r) => {
+          if (r && r.id) allLocalMap.set(r.id, r);
+        });
+        const localList = Array.from(allLocalMap.values());
+
+        for (const r of localList) {
           try {
             await saveReportToFirestore(r);
           } catch {}
         }
 
-        // 2. Fetch reports from Firestore and merge with local reports, prioritizing cloud verification status & updates
         const cloudReports = await fetchReportsFromFirestore();
-        const reportMap = new Map<string, LaporanPLC>();
-
-        localBeforeSync.forEach((r) => {
-          reportMap.set(r.id, r);
-        });
+        const masterMap = new Map<string, LaporanPLC>();
+        localList.forEach((r) => masterMap.set(r.id, r));
 
         if (cloudReports && cloudReports.length > 0) {
           cloudReports.forEach((cr) => {
-            const existing = reportMap.get(cr.id);
+            const existing = masterMap.get(cr.id);
             if (!existing) {
-              reportMap.set(cr.id, cr);
+              masterMap.set(cr.id, cr);
             } else {
               const cloudTime = new Date(cr.updated_at || cr.tarikh).getTime();
               const localTime = new Date(existing.updated_at || existing.tarikh).getTime();
               if ((cr.status === 'disahkan' && existing.status !== 'disahkan') || cloudTime >= localTime) {
-                reportMap.set(cr.id, cr);
+                masterMap.set(cr.id, cr);
               }
             }
           });
         }
 
-        const merged = Array.from(reportMap.values()).sort(
+        const merged = Array.from(masterMap.values()).sort(
           (a, b) => new Date(b.created_at || b.tarikh).getTime() - new Date(a.created_at || a.tarikh).getTime()
         );
 
         setReports(merged);
         saveStoredReports(merged);
-        saveReportsToIDB(merged);
+        await saveReportsToIDB(merged);
 
         if (verifyReportId) {
           const matchTarget = merged.find((r) => r.id === verifyReportId);
@@ -205,14 +207,12 @@ export default function App() {
           }
         }
 
-        // Fetch school info from Firestore
         const cloudSchool = await fetchSchoolFromFirestore();
         if (cloudSchool) {
           setSchoolInfo(cloudSchool);
           saveStoredSchool(cloudSchool);
         }
 
-        // Fetch staff directory from Firestore
         const cloudStaff = await fetchStaffFromFirestore();
         if (cloudStaff && cloudStaff.length > 0) {
           setStaffList(cloudStaff);
@@ -228,46 +228,50 @@ export default function App() {
   const handleRefreshData = async () => {
     try {
       const localReports = getStoredReports();
-      for (const r of localReports) {
+      const idbReports = await getReportsFromIDB();
+      const allLocalMap = new Map<string, LaporanPLC>();
+      [...localReports, ...idbReports].forEach((r) => {
+        if (r && r.id) allLocalMap.set(r.id, r);
+      });
+      const localList = Array.from(allLocalMap.values());
+
+      for (const r of localList) {
         try {
           await saveReportToFirestore(r);
         } catch {}
       }
 
       const cloudReports = await fetchReportsFromFirestore();
-      const reportMap = new Map<string, LaporanPLC>();
-
-      localReports.forEach((r) => {
-        reportMap.set(r.id, r);
-      });
+      const masterMap = new Map<string, LaporanPLC>();
+      localList.forEach((r) => masterMap.set(r.id, r));
 
       if (cloudReports && cloudReports.length > 0) {
         cloudReports.forEach((cr) => {
-          const existing = reportMap.get(cr.id);
+          const existing = masterMap.get(cr.id);
           if (!existing) {
-            reportMap.set(cr.id, cr);
+            masterMap.set(cr.id, cr);
           } else {
             const cloudTime = new Date(cr.updated_at || cr.tarikh).getTime();
             const localTime = new Date(existing.updated_at || existing.tarikh).getTime();
             if ((cr.status === 'disahkan' && existing.status !== 'disahkan') || cloudTime >= localTime) {
-              reportMap.set(cr.id, cr);
+              masterMap.set(cr.id, cr);
             }
           }
         });
       }
 
-      const merged = Array.from(reportMap.values()).sort(
+      const merged = Array.from(masterMap.values()).sort(
         (a, b) => new Date(b.created_at || b.tarikh).getTime() - new Date(a.created_at || a.tarikh).getTime()
       );
 
       setReports(merged);
       saveStoredReports(merged);
-      saveReportsToIDB(merged);
+      await saveReportsToIDB(merged);
 
       alert(
         lang === 'ms'
-          ? `Penyelarasan Berjaya! ${merged.length} laporan diselaraskan.`
-          : `Sync Successful! ${merged.length} reports synchronized.`
+          ? `Penyelarasan Master Berjaya! Jumlah keseluruhan: ${merged.length} laporan diselaraskan.`
+          : `Master Sync Successful! Total ${merged.length} reports synchronized.`
       );
     } catch {
       const localReports = getStoredReports();
