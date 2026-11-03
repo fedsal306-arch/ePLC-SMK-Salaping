@@ -59,7 +59,13 @@ export default function App() {
   // Load data on startup from Firestore with LocalStorage fallback & handle WhatsApp verify link
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const verifyReportId = urlParams.get('verify') || urlParams.get('reportId');
+    let deletedIds: string[] = [];
+    try {
+      deletedIds = JSON.parse(localStorage.getItem('eplc_deleted_ids') || '[]');
+    } catch {}
+
+    const verifyReportIdRaw = urlParams.get('verify') || urlParams.get('reportId');
+    const verifyReportId = verifyReportIdRaw && !deletedIds.includes(verifyReportIdRaw) ? verifyReportIdRaw : null;
 
     if (verifyReportId) {
       // Automatically switch session to Pengetua (Sanaleh bin Daud) for 1-click endorsement
@@ -414,6 +420,12 @@ export default function App() {
       }
     } catch {}
 
+    // Clear URL params if deleting the currently viewed report
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('verify') === reportId || urlParams.get('reportId') === reportId) {
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+
     // 2. Immediately update local state & storage
     const updated = reports.filter((r) => r.id !== reportId);
     setReports(updated);
@@ -424,10 +436,16 @@ export default function App() {
       setSelectedReport(null);
     }
 
-    // 3. Delete from Firestore cloud in background
+    // 3. Delete from Firestore cloud
     try {
       await deleteReportFromFirestore(reportId);
     } catch {}
+
+    alert(
+      lang === 'ms'
+        ? 'Laporan berjaya dipadam dari sistem.'
+        : 'Report successfully deleted from system.'
+    );
   };
 
   const handleEditReport = (report: LaporanPLC) => {
