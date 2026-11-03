@@ -66,11 +66,11 @@ export const Header: React.FC<HeaderProps> = ({
     const nextName =
       nextRole === 'pentadbir'
         ? 'Sanaleh bin Daud'
-        : 'Cikgu Ahmad Farhan bin Ismail';
+        : 'Cikgu Guru Akademik SMK Salaping';
     const nextJawatan =
       nextRole === 'pentadbir'
         ? 'Pengetua, SMK Salaping'
-        : 'Guru Kanan Sains & Matematik';
+        : 'Guru Akademik / Pelapor PLC';
 
     setCurrentUser({
       ...currentUser,

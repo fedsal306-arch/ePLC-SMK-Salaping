@@ -130,12 +130,12 @@ export default function App() {
               interpretasi: 'Sesi perkongsian amalan terbaik dijalankan secara kolaboratif bagi memantapkan kualiti PdPc guru dan pencapaian murid.',
               hasil_refleksi: 'Dapatan sesi memberi impak positif kepada penambahbaikan strategi pengajaran panitia.',
               ahli_kumpulan: [
-                { id: '1', nama: 'Cikgu Ahmad Farhan bin Ismail', no_kp: '860412-14-5541', jawatan: 'Guru Kanan Sains & Matematik' },
-                { id: '2', nama: 'Puan Siti Nurhaliza binti Zulkifli', no_kp: '891005-10-5226', jawatan: 'Ketua Panitia Bahasa Melayu' }
+                { id: '1', nama: 'Cikgu Guru Panitia SMK Salaping', no_kp: '860412-14-XXXX', jawatan: 'Guru Akademik' },
+                { id: '2', nama: 'Cikgu Ahli PLC SMK Salaping', no_kp: '891005-10-XXXX', jawatan: 'Guru Panitia' }
               ],
               disediakan_oleh: {
-                nama: 'Cikgu Ahmad Farhan bin Ismail',
-                jawatan: 'Guru Kanan Sains & Matematik',
+                nama: 'Cikgu Pelapor PLC SMK Salaping',
+                jawatan: 'Guru Akademik',
                 tarikh_tandatangan: new Date().toISOString().slice(0, 10),
                 tandatangan_digital: ''
               },
